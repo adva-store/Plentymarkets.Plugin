@@ -1,0 +1,17 @@
+{
+    "name"              :   "Advastore",
+    "namespace"         :   "Advastore",
+    "type"              :   "backend",
+    "version"           :   "0.0.2",
+    "pluginIcon"        :   "icon_plugin_xs.png",
+    "description"       :   "This plugin integrates plentymarkets with Advastore",
+    "author"            :   "COM.Create GmbH",
+    "authorIcon"        :   "icon_author_xs.png",
+    "serviceProvider"   :   "Advastore\\Providers\\AdvastoreServiceProvider",
+    "platform": {
+        "php": ">=7.3 <8.1"
+    },
+    "runOnBuild": [
+        "Advastore\\Migrations\\CreateReferrer"
+    ]
+}
