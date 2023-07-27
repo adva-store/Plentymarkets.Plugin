@@ -69,7 +69,7 @@ class ProductExport
     private function getVariationsdata(): array
     {
         $this->variationSearchRepository->clearFilters();
-        $this->variationSearchRepository->setFilters(['referrerId' => Settings::getReferrerId()]);
+        $this->variationSearchRepository->setFilters(['isActive' => true]);
 
         $variationsData[] = $this->getHeader();
         $page = 1;
@@ -93,16 +93,16 @@ class ProductExport
 
                 $variationsData[] = array_filter([
                     'sellerSku'            => $variation['id'],
-                    'gtins'                => $variation['variationBarcodes'][0]['code'] ??'',
+                    'gtins'                => $variation['variationBarcodes'][0]['code'] ?? ' ',
                     'manufacturerSKU'      => ' ',
-                    'manufacturer'         => $this->getManufacturer($item['manufacturerId'])->name,
+                    'manufacturer'         => $this->getManufacturer($item['manufacturerId'])->name ?? 'No manufacturer',
                     'minimumSizeBundle'    => ' ',
-                    'price'                => ' ',
+                    'price'                => 20,
                     'containsBattery'      => ' ',
                     'advaHandling'         => 1,
-                    'imageUrl'             => $variation['images'][0]['urlPreview'] ??'',
-                    'sellerSkuName'        => $item['texts'][0]['name1'],
-                    'sellerSkuDescription' => $item['texts'][0]['shortDescription']
+                    'imageUrl'             => $variation['images'][0]['urlPreview'] ?? ' ',
+                    'sellerSkuName'        => $item['texts'][0]['name1'] ?? ' ',
+                    'sellerSkuDescription' => 'description'
                 ]);
             }
 

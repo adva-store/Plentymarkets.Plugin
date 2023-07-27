@@ -19,7 +19,7 @@ class AdvastoreRouteServiceProvider extends RouteServiceProvider
 {
     public function map(ApiRouter $apiRouter): void
     {
-        $prefix = strtolower(Settings::PLUGIN_NAME);
+        $prefix = 'advahook';
 
         $apiRouter->version(['v1'], ['middleware' => [TokenAuth::class]], function ($router) use ($prefix)
         {

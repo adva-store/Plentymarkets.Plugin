@@ -29,19 +29,19 @@ class AdvastoreDispatcher
     ){
         $this
             ->getLogger('AdvastoreDispatcher')
-            ->addReference('endpoint',$this->request->get('advahook'))
+            ->addReference('endpoint',$this->request->get('process'))
             ->report(Settings::PLUGIN_NAME.'::Logger.debug');
     }
 
     /**
-     * Dispatches the request to the appropriate handler based on the 'advahook' request parameter.
+     * Dispatches the request to the appropriate handler based on the 'process' request parameter.
      *
      * @return Response|SymfonyResponse
      * @noinspection PhpUnused
      */
     public function dispatch(): Response|SymfonyResponse
     {
-        $advahook = $this->request->get('advahook');
+        $advahook = $this->request->get('process');
 
         try {
             switch ($advahook) {

@@ -53,6 +53,6 @@ class WebserviceMethods extends Dispatcher
           'webHookUrl' => $webHookUrl
         ];
 
-        return $this->put($request);
+        return $this->get($request);
     }
 }
