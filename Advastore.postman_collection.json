@@ -619,7 +619,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/rest/advahook/debug/order/confirmation",
+					"raw": "{{url}}/rest/advahook/debug/authtoken/delete",
 					"host": [
 						"{{url}}"
 					],
