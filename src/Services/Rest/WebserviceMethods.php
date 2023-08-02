@@ -67,12 +67,12 @@ class WebserviceMethods extends Dispatcher
     {
         $request = pluginApp(RequestModel::class);
         $request->requestURL = Settings::ENDPOINT_CONFIG;
-        $request->postfields = [
-          'merchantId' => $merchantId,
-          'webHookUrl' => $webHookUrl
-        ];
+//        $request->postfields = [
+//          'merchantId' => $merchantId,
+//          'webHookUrl' => $webHookUrl
+//        ];
 
-        return $this->put($request);
+        return $this->get($request);
     }
 
     /**
