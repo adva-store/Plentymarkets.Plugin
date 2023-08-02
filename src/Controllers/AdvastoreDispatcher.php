@@ -135,7 +135,7 @@ class AdvastoreDispatcher
 
         if($wizardData->getSettings())
         {
-            $service->sendConfig($wizardData->getMerchantId());
+            //$service->sendConfig($wizardData->getMerchantId());
 
             return $this->response->make('OK');
         }
