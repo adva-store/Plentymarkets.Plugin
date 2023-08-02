@@ -10,23 +10,39 @@ use Plenty\Modules\Account\Address\Models\AddressRelationType;
 use Plenty\Modules\Order\Models\Order as PlentyOrder;
 use Plenty\Modules\Order\Models\OrderItemType;
 
+/**
+ * Class OrderBuilder
+ *
+ * A class for building AdvaStore orders from PlentyOrders.
+ */
 class OrderBuilder
 {
+    /**
+     * The allowed order item types for building AdvaStore orders.
+     */
     const allowedOrderItems = [
       OrderItemType::TYPE_VARIATION,
       OrderItemType::TYPE_BUNDLE_COMPONENT,
       OrderItemType::TYPE_SET_COMPONENT
     ];
 
+    /**
+     * @var AdvaStoreOrder The AdvaStore order instance being built.
+     */
     private AdvaStoreOrder $advastoreOrder;
 
+    /**
+     * OrderBuilder constructor.
+     */
     public function __construct() {
         $this->advastoreOrder = pluginApp(AdvaStoreOrder::class);
     }
 
     /**
-     * @param PlentyOrder $plentyOrder
-     * @return AdvaStoreOrder
+     * Build an AdvaStore order from the given PlentyOrder.
+     *
+     * @param PlentyOrder $plentyOrder The PlentyOrder to build the AdvaStore order from.
+     * @return AdvaStoreOrder Returns the built AdvaStore order.
      */
     public function buildOrder(PlentyOrder $plentyOrder): AdvaStoreOrder
     {
@@ -43,8 +59,10 @@ class OrderBuilder
     }
 
     /**
-     * @param PlentyOrder $order
-     * @return CustomerAddress
+     * Build a customer address from the given PlentyOrder.
+     *
+     * @param PlentyOrder $order The PlentyOrder to build the customer address from.
+     * @return CustomerAddress Returns the built customer address.
      */
     protected function buildAddress(PlentyOrder $order): CustomerAddress
     {

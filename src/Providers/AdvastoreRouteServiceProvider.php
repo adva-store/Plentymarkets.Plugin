@@ -8,6 +8,8 @@ use Advastore\Controllers\AdvastoreController;
 use Advastore\Controllers\AdvastoreDispatcher;
 use Advastore\Middlewares\TokenAuth;
 use Advastore\Migrations\CreateReferrer;
+use Advastore\Services\Authentication\TokenAuthenticator;
+use Advastore\Services\Order\OrderConfirmation;
 use Plenty\Plugin\RouteServiceProvider;
 use Plenty\Plugin\Routing\ApiRouter;
 
@@ -19,15 +21,17 @@ class AdvastoreRouteServiceProvider extends RouteServiceProvider
 {
     public function map(ApiRouter $apiRouter): void
     {
-        $prefix = strtolower(Settings::PLUGIN_NAME);
+        $prefix = Settings::URL_PREFIX;
 
         $apiRouter->version(['v1'], ['middleware' => [TokenAuth::class]], function ($router) use ($prefix)
         {
-            // WebHooks
-            // The advastore.Api expects the external application to provide certain WebHooks.
-            // The WebHooks are all sent to the same base URL. The functions are supplied via
-            // the URL parameter hookah. In addition, the ApiKey is passed via the token parameter.
-            // The ApiKey corresponds to the key with which the application logs on to advastore.Api.
+            /** WebHooks
+             *
+             * The advastore.Api expects the external application to provide certain WebHooks.
+             * The WebHooks are all sent to the same base URL. The functions are supplied via
+             * the URL parameter process. In addition, the ApiKey is passed via the token parameter.
+             * The ApiKey corresponds to the key with which the application logs on to advastore.Api.
+            **/
 
             $router->get($prefix,AdvastoreDispatcher::class.'@dispatch');
         });
@@ -38,7 +42,9 @@ class AdvastoreRouteServiceProvider extends RouteServiceProvider
             $router->get($prefix.'/debug/products/export',AdvastoreController::class.'@downloadProductData');
             $router->get($prefix.'/debug/migrations/run',CreateReferrer::class.'@run');
             $router->get($prefix.'/debug/settings/get',WizardData::class.'@getSettings');
+            $router->get($prefix.'/debug/order/confirmation',OrderConfirmation::class.'@handle');
             $router->delete($prefix.'/debug/settings/delete',WizardData::class.'@resetWizardData');
+			$router->delete($prefix.'/debug/authtoken/delete',TokenAuthenticator::class.'@resetAuthToken');
 
             $router->get($prefix.'/debug',AdvastoreController::class.'@debug');
         });

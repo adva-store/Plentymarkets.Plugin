@@ -16,13 +16,13 @@ class CredentialsStep
                             'minValue' => 2,
                             "required"  => true,
                             'options' => [
-                                'name' => 'merchantId',
+                                'name' => 'Wizard.credentials.merchantId',
                             ]
                         ],
                         "isTesting" => [
                             "type" => "toggle",
                             "options" => [
-                                "name" => "Testing",
+                                "name" => "Wizard.credentials.testing",
                                 "defaultValue" => false
                             ]
                         ],
@@ -32,7 +32,7 @@ class CredentialsStep
                             'minValue' => 2,
                             "required"  => true,
                             'options' => [
-                                'name' => 'Sandbox-API Token',
+                                'name' => 'Wizard.credentials.sandboxtoken',
                             ]
                         ]
                     ]

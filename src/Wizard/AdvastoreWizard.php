@@ -11,14 +11,32 @@ use Advastore\Wizard\Steps\WarehouseStep;
 use Plenty\Modules\Wizard\Services\WizardProvider;
 use Plenty\Plugin\Application;
 
+/**
+ * Class AdvastoreWizard
+ *
+ * Represents a custom implementation of the wizard for setting up the Advastore plugin in the Plenty platform.
+ * Extends the WizardProvider class to provide the wizard structure and steps.
+ */
 class AdvastoreWizard extends WizardProvider
 {
+    /**
+     * AdvastoreWizard constructor.
+     *
+     * @param CredentialsStep $credentialsStep
+     * @param WarehouseStep $warehouseStep
+     * @param OrderSteps $orderSteps
+     */
     public function __construct(
         private CredentialsStep $credentialsStep,
         private WarehouseStep $warehouseStep,
         private OrderSteps $orderSteps
     ){}
 
+    /**
+     * Generate the structure of the Advastore wizard.
+     *
+     * @return array Returns an array representing the structure of the wizard.
+     */
     protected function structure():array
     {
         $wizard = [
@@ -40,7 +58,9 @@ class AdvastoreWizard extends WizardProvider
     }
 
     /**
-     * @return string
+     * Get the URL path of the plugin's icon for the wizard.
+     *
+     * @return string Returns the URL path of the plugin's icon for the wizard.
      */
     private function getIcon(): string
     {

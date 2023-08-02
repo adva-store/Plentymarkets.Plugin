@@ -1,0 +1,700 @@
+{
+	"info": {
+		"_postman_id": "55c721b2-8591-4e0a-b2db-d54f1ac4b094",
+		"name": "Advastore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "API",
+			"item": [
+				{
+					"name": "Send Order",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "SandboxApiKey",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{advastore_sandbox_key}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"thorsten.laing@com-create.com\",\n  \"externalCustomerNo\": \"0\",\n  \"externalOrderNo\": \"1650\",\n  \"allowPartiallyFulfillment\": false,\n  \"orderTime\": \"2023-06-26T17:04:44+02:00\",\n  \"shippingAddress\": {\n    \"firstName\": \"Max\",\n    \"lastName\": \"Mustermann\",\n    \"phoneNumber\": \"123456\",\n    \"companyName\": \"NASA\",\n    \"street\": \"Musterstr.\",\n    \"houseNo\": \"6\",\n    \"postalCode\": \"12345\",\n    \"city\": \"Entenhausen\",\n    \"countryIsoCode\": \"DE\",\n    \"additionToAddress\": \"Im Garten\"\n  },\n  \"orderPositions\": [\n    {\n      \"quantity\": 1,\n      \"sellerSku\": \"2144\",\n      \"netSalesPrice\": 840.3361,\n      \"grossSalesPrice\": 1000\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{advastore_sandbox_url}}/v1/orders",
+							"host": [
+								"{{advastore_sandbox_url}}"
+							],
+							"path": [
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Config",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Sandboxapikey",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{advastore_sandbox_key}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"merchantId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"webHookUrl\": \"https://k6xfazmbd6ib.c01-14.plentymarkets.com/rest/advastore\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{advastore_sandbox_url}}/v1/config",
+							"host": [
+								"{{advastore_sandbox_url}}"
+							],
+							"path": [
+								"v1",
+								"config"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Version",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "sandboxapikey",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{advastore_sandbox_key}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{advastore_sandbox_url}}/version",
+							"host": [
+								"{{advastore_sandbox_url}}"
+							],
+							"path": [
+								"version"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stock",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Sandboxapikey",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{advastore_sandbox_key}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{advastore_sandbox_url}}/v1/stocks",
+							"host": [
+								"{{advastore_sandbox_url}}"
+							],
+							"path": [
+								"v1",
+								"stocks"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Debug",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook/debug",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook",
+						"debug"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Migrations | Run",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook/debug/migrations/run",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook",
+						"debug",
+						"migrations",
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Webhook | HealthCheck",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook?process=healthCheck&token={{PluginAuthToken}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook"
+					],
+					"query": [
+						{
+							"key": "process",
+							"value": "healthCheck"
+						},
+						{
+							"key": "token",
+							"value": "{{PluginAuthToken}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Webhook | generateProductCSV",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook?process=generateProductCSV&token={{PluginAuthToken}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook"
+					],
+					"query": [
+						{
+							"key": "process",
+							"value": "generateProductCSV"
+						},
+						{
+							"key": "token",
+							"value": "{{PluginAuthToken}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Webhook | getProductCSV",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook?process=getProductCSV&token={{PluginAuthToken}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook"
+					],
+					"query": [
+						{
+							"key": "process",
+							"value": "getProductCSV"
+						},
+						{
+							"key": "token",
+							"value": "{{PluginAuthToken}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Webhook | getConfig",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook?process=getConfig&token={{PluginAuthToken}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook"
+					],
+					"query": [
+						{
+							"key": "process",
+							"value": "getConfig"
+						},
+						{
+							"key": "token",
+							"value": "{{PluginAuthToken}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Webhook | getStocks",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook?process=getStocks&token={{PluginAuthToken}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook"
+					],
+					"query": [
+						{
+							"key": "process",
+							"value": "getStocks"
+						},
+						{
+							"key": "token",
+							"value": "{{PluginAuthToken}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Webhook | getDeliveryDates",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook?process=getDeliveryDates&token={{PluginAuthToken}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook"
+					],
+					"query": [
+						{
+							"key": "process",
+							"value": "getDeliveryDates"
+						},
+						{
+							"key": "token",
+							"value": "{{PluginAuthToken}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products | Debug Prepare",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook/debug/products/prepare",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook",
+						"debug",
+						"products",
+						"prepare"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products | Debug Download",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook/debug/products/export",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook",
+						"debug",
+						"products",
+						"export"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order | OrderConfirmations",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook/debug/order/confirmation",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook",
+						"debug",
+						"order",
+						"confirmation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Debug  | Wizard | Settings",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook/debug/settings/get",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook",
+						"debug",
+						"settings",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Debug  | Wizard | Reset",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook/debug/settings/delete",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook",
+						"debug",
+						"settings",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset AuthToken",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook/debug/order/confirmation",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook",
+						"debug",
+						"order",
+						"confirmation"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{advastore_sandbox_key}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "Sandboxapikey",
+				"type": "string"
+			},
+			{
+				"key": "in",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": ""
+		},
+		{
+			"key": "bearer",
+			"value": ""
+		},
+		{
+			"key": "advastore_sandbox_url",
+			"value": ""
+		},
+		{
+			"key": "advastore_sandbox_key",
+			"value": ""
+		},
+		{
+			"key": "PluginAuthToken",
+			"value": ""
+		}
+	]
+}

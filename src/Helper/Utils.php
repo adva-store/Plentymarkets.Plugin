@@ -2,6 +2,11 @@
 
 namespace Advastore\Helper;
 
+/**
+ * Class Utils
+ *
+ * A utility class containing various helper methods for common operations.
+ */
 class Utils
 {
     /**

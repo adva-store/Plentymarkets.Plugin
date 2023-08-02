@@ -26,22 +26,23 @@ class AdvastoreDispatcher
     public function __construct(
         private Request $request,
         private Response $response
-    ){
+    )
+    {
         $this
             ->getLogger('AdvastoreDispatcher')
-            ->addReference('endpoint',$this->request->get('advahook'))
-            ->report(Settings::PLUGIN_NAME.'::Logger.debug');
+            ->addReference('endpoint',$this->request->get(Settings::URL_PARAMETER))
+            ->report(Settings::PLUGIN_NAME.'::Logger.report');
     }
 
     /**
-     * Dispatches the request to the appropriate handler based on the 'advahook' request parameter.
+     * Dispatches the request to the appropriate handler based on the 'process' request parameter.
      *
      * @return Response|SymfonyResponse
      * @noinspection PhpUnused
      */
     public function dispatch(): Response|SymfonyResponse
     {
-        $advahook = $this->request->get('advahook');
+        $advahook = $this->request->get(Settings::URL_PARAMETER);
 
         try {
             switch ($advahook) {
@@ -68,17 +69,19 @@ class AdvastoreDispatcher
             }
         }
         catch (Exception $e) {
-            $this->getLogger('Webhook-Dispatcher')->error('Exception',$e);
+            $this->getLogger('AdvastoreDispatcher')->error('Exception',$e);
             return $this->response->make($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
      * Handles a health check request.
+     *
      * Response HTTP 200: OK if plugin is installed and configured
+     *
      * Response HTTP 202: ACCEPTED if the plugin is not yet configured
      *
-     * @return Response A response indicating the status of the health check.
+     * @return Response indicating the status of the health check.
      */
     private function handleHealthCheck(): Response
     {
@@ -89,13 +92,13 @@ class AdvastoreDispatcher
             return $this->response->make('ACCEPTED', Response::HTTP_ACCEPTED);
         }
 
-        return $this->response->make('OK',);
+        return $this->response->make('OK');
     }
 
     /**
      * Handles a request to generate product CSV.
      *
-     * @return Response A response indicating the status of the operation.
+     * @return Response indicating the status of the operation.
      */
     private function handleProductCSVGeneration(): Response
     {
@@ -107,7 +110,7 @@ class AdvastoreDispatcher
     /**
      * Handles a request to export product CSV.
      *
-     * @return Response A response containing the product CSV.
+     * @return Response containing the product CSV.
      */
     private function handleProductCSVExport(): Response
     {
@@ -122,7 +125,7 @@ class AdvastoreDispatcher
     /**
      * Handles a request to update configuration.
      *
-     * @return Response A response indicating the status of the operation.
+     * @return Response indicating the status of the operation.
      * @throws Exception
      */
     private function handleConfigUpdate(): Response
@@ -132,8 +135,7 @@ class AdvastoreDispatcher
 
         if($wizardData->getSettings())
         {
-            $apiKey = $service->sendConfig($wizardData->getMerchantId());
-            $wizardData->modifiesWizardData('apiKey',$apiKey);
+            $service->sendConfig($wizardData->getMerchantId());
 
             return $this->response->make('OK');
         }
@@ -144,25 +146,24 @@ class AdvastoreDispatcher
     /**
      * Handles a request to get stocks.
      *
-     * @return Response A response containing the stocks.
+     * @return Response containing the stocks.
      * @throws Exception
      */
     private function handleGetStocks(): Response
     {
-        $service = pluginApp(StockImport::class);
-        $service->importStock();
+        pluginApp(StockImport::class)->importStock();
 
-        return $this->response->make('OK',);
+        return $this->response->make('OK');
     }
 
     /**
      * Handles a request to get delivery dates.
      *
-     * @return Response A response containing the delivery dates.
+     * @return Response containing the delivery dates.
      */
     private function handleGetDeliveryDates(): Response
     {
-        // Implement your logic here
-        return $this->response->make('OK',);
+        // Not implemented now!
+        return $this->response->make('OK');
     }
 }

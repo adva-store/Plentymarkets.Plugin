@@ -8,16 +8,22 @@ use Advastore\Helper\Data\DataStorage;
 use Plenty\Modules\Item\Item\Contracts\ItemRepositoryContract;
 use Plenty\Modules\Item\Item\Models\Item;
 use Plenty\Modules\Item\Manufacturer\Contracts\ManufacturerRepositoryContract;
-use Plenty\Modules\Item\Manufacturer\Models\Manufacturer;
 use Plenty\Modules\Item\Variation\Contracts\VariationSearchRepositoryContract;
 use Plenty\Modules\Item\Variation\Models\Variation;
 use Plenty\Plugin\Log\Loggable;
 
+/**
+ * Class ProductExport
+ *
+ * A class for exporting products to Advastore
+ */
 class ProductExport
 {
     use Loggable;
 
-    /** @var array  */
+    /**
+     * @var array Holds the cached data.
+     */
     private array $CACHE = [];
 
     /**
@@ -69,7 +75,10 @@ class ProductExport
     private function getVariationsdata(): array
     {
         $this->variationSearchRepository->clearFilters();
-        $this->variationSearchRepository->setFilters(['referrerId' => Settings::getReferrerId()]);
+        $this->variationSearchRepository->setFilters([
+            'referrerId' => Settings::getReferrerId(),
+            'isActive' => true
+        ]);
 
         $variationsData[] = $this->getHeader();
         $page = 1;
@@ -80,7 +89,8 @@ class ProductExport
                 'with' => [
                     'variationBarcodes'=>true,
                     'images'=>true,
-                    'variationAttributeValues'=>true
+                    'variationAttributeValues'=>true,
+                    'variationSalesPrices'=>true
                 ]
             ]);
 
@@ -91,19 +101,19 @@ class ProductExport
             {
                 $item = $this->getItemData($variation['itemId'])->toArray();
 
-                $variationsData[] = array_filter([
+                $variationsData[] = [
                     'sellerSku'            => $variation['id'],
-                    'gtins'                => $variation['variationBarcodes'][0]['code'] ??'',
+                    'gtins'                => $variation['variationBarcodes'][0]['code'] ?? ' ',
                     'manufacturerSKU'      => ' ',
-                    'manufacturer'         => $this->getManufacturer($item['manufacturerId'])->name,
+                    'manufacturer'         => $this->getManufacturer($item['manufacturerId']),
                     'minimumSizeBundle'    => ' ',
-                    'price'                => ' ',
+                    'price'                => $variation['variationSalesPrices'][0]['price'],
                     'containsBattery'      => ' ',
                     'advaHandling'         => 1,
-                    'imageUrl'             => $variation['images'][0]['urlPreview'] ??'',
-                    'sellerSkuName'        => $item['texts'][0]['name1'],
-                    'sellerSkuDescription' => $item['texts'][0]['shortDescription']
-                ]);
+                    'imageUrl'             => $variation['images'][0]['urlPreview'] ?? ' ',
+                    'sellerSkuName'        => $item['texts'][0]['name1'] ?? ' ',
+                    'sellerSkuDescription' => $item['texts'][0]['shortDescription'] ?? ' '
+                ];
             }
 
             $page++;
@@ -134,15 +144,17 @@ class ProductExport
      * Retrieve manufacturer data.
      *
      * @param int $manufacturerId The ID of the manufacturer.
-     * @return Manufacturer The Manufacturer object.
+     * @return string The Manufacturer object.
      */
-    private function getManufacturer(int $manufacturerId): Manufacturer
+    private function getManufacturer(int $manufacturerId): string
     {
         if(isset($this->CACHE['manufacturer'][$manufacturerId])) {
             return $this->CACHE['manufacturer'][$manufacturerId];
         }
 
-        $manufacturer = $this->manufacturerRepository->findById($manufacturerId);
+        $manufacturer = ($manufacturerId)
+            ? $this->manufacturerRepository->findById($manufacturerId)->name
+            : 'Unknown';
 
         return $this->CACHE['manufacturer'][$manufacturerId] = $manufacturer;
     }

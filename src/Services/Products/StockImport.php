@@ -8,10 +8,22 @@ use Exception;
 use Plenty\Modules\Item\VariationStock\Contracts\VariationStockRepositoryContract;
 use Plenty\Plugin\Log\Loggable;
 
+/**
+ * Class StockImport
+ *
+ * Service to import and correct stock quantities.
+ */
 class StockImport
 {
     use Loggable;
 
+    /**
+     * StockImport constructor.
+     *
+     * @param WizardData $wizardData The WizardData instance for data access.
+     * @param WebserviceMethods $webserviceMethods The WebserviceMethods instance for accessing web services.
+     * @param VariationStockRepositoryContract $variationStockRepository The VariationStockRepositoryContract instance for variation stock management.
+     */
     public function __construct(
         private WizardData $wizardData,
         private WebserviceMethods $webserviceMethods,
@@ -19,7 +31,11 @@ class StockImport
     ){}
 
     /**
-     * @throws Exception
+     * Import stock quantities from the web service and correct stock in the system.
+     *
+     * @throws Exception If an error occurs during the import or stock correction process.
+     *
+     * @return void
      */
     public function importStock(): void
     {
@@ -31,6 +47,14 @@ class StockImport
 
     }
 
+    /**
+     * Correct the stock quantity for a specific variation.
+     *
+     * @param mixed $variationId The ID of the variation.
+     * @param int $stockQuantity The stock quantity to be corrected.
+     *
+     * @return void
+     */
     public function correctStock(mixed $variationId, int $stockQuantity): void
     {
         try {

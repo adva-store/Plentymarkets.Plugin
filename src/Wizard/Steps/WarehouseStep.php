@@ -19,7 +19,7 @@ class WarehouseStep
                         'warehouse' => [
                             'type' => 'select',
                             'options' => [
-                                "name" => "Lager",
+                                "name" => "Wizard.warehouse.title",
                                 "listBoxValues" => $this->buildWarehouseCheckBoxValues()
                             ]
                         ]

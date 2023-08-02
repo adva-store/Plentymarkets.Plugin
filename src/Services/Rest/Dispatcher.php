@@ -9,6 +9,11 @@ use Advastore\Models\Request\RequestModel;
 use Advastore\Config\Settings;
 use Advastore\Config\WizardData;
 
+/**
+ * Class Dispatcher
+ *
+ * A class for handling HTTP requests to the Advastore API.
+ */
 class Dispatcher
 {
 	use Loggable;
@@ -19,6 +24,9 @@ class Dispatcher
     protected bool   $isTesting    = true;
 
     /**
+     * Dispatcher constructor.
+     *
+     * @param WizardData $wizardData
      * @throws Exception
      */
     public function __construct(
@@ -34,10 +42,15 @@ class Dispatcher
         }
 	}
 
-	/**
-	 * @throws Exception
-	 */
-	private function sendRequest($method, RequestModel $request): mixed
+    /**
+     * Send an HTTP request to the Advastore API.
+     *
+     * @param string $method The HTTP method (GET, POST, PUT, DELETE) for the request.
+     * @param RequestModel $request The RequestModel object containing the request details.
+     * @return mixed Returns the decoded JSON response from the API.
+     * @throws Exception
+     */
+	private function sendRequest(string $method, RequestModel $request): mixed
 	{
 		$header[] = "Content-Type: $request->contentType";
         $header[] = "ApiKey: $this->apiToken";
@@ -84,31 +97,47 @@ class Dispatcher
         return json_decode($response);
 	}
 
-	/**
-	 * @throws Exception
-	 */
+    /**
+     * Send a GET request to the Advastore API.
+     *
+     * @param RequestModel $requestModel The RequestModel object containing the request
+     * @return mixed Returns the decoded JSON response from the API.
+     * @throws Exception
+     */
 	protected function get(RequestModel $requestModel): mixed
     {
 		return $this->sendRequest('GET', $requestModel);
 	}
 
-	/**
-	 * @throws Exception
-	 */
+    /**
+     * Send a POST request to the Advastore API.
+     *
+     * @param RequestModel $requestModel The RequestModel object containing the request
+     * @return mixed Returns the decoded JSON response from the API.
+     * @throws Exception
+     */
     protected function post(RequestModel $requestModel): mixed {
 		return $this->sendRequest('POST', $requestModel);
 	}
 
-	/**
-	 * @throws Exception
-	 */
+    /**
+     * Send a PUT request to the Advastore API.
+     *
+     * @param RequestModel $requestModel The RequestModel object containing the request
+     * @return mixed Returns the decoded JSON response from the API.
+     * @throws Exception
+     */
     protected function put(RequestModel $requestModel): mixed {
 		return $this->sendRequest('PUT', $requestModel);
 	}
 
-	/**
-	 * @throws Exception
-	 */
+    /**
+     * Send a DELETE request to the Advastore API.
+     *
+     * @param RequestModel $requestModel The RequestModel object containing the request
+     * @return mixed Returns the decoded JSON response from the API.
+     * @throws Exception
+     */
     protected function delete(RequestModel $requestModel): mixed {
 		return $this->sendRequest('DELETE', $requestModel);
 	}

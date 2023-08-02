@@ -11,10 +11,18 @@ use Plenty\Modules\Order\Models\Order as plentyOrder;
 use Plenty\Plugin\Log\Loggable;
 use Exception;
 
+/**
+ * Class OrderExport
+ *
+ * A class for exporting order to Advastore
+ */
 class OrderExport
 {
     use Loggable;
 
+    /**
+     * OrderExport constructor.
+     */
     public function __construct(
         private WebserviceMethods $webservice,
         private OrderBuilder $orderBuilder,
@@ -23,19 +31,29 @@ class OrderExport
     ){}
 
     /**
-     * Exports an order to the external system and updates the status and external order ID in Plenty.
+     * Export the PlentyOrder to Advastore.
      *
-     * @param  plentyOrder $plentyOrder The order to export.
-     * @return advastoreOrder The exported order.
-     * @throws Exception If an error occurs during order export.
+     * @param plentyOrder $plentyOrder The PlentyOrder to be exported to Advastore.
+     *
+     * @return advastoreOrder The AdvastoreOrder created from the exported data.
+     * @throws Exception
      */
     public function export(plentyOrder $plentyOrder): advastoreOrder
     {
         $advastoreOrder = $this->orderBuilder->buildOrder($plentyOrder);
         $response = $this->webservice->sendOrder($advastoreOrder);
 
-        OrderHelper::setExternalOrdered($plentyOrder->id,$response->requestId);
-        OrderHelper::setOrderStatus($plentyOrder->id,$this->wizardData->getStatusId());
+        if($response->requestId)
+        {
+            OrderHelper::setExternalOrderId($plentyOrder->id,$response->requestId);
+            OrderHelper::setOrderStatus($plentyOrder->id,$this->wizardData->getStatusId());
+        }
+        else
+        {
+            OrderHelper::setOrderStatus($plentyOrder->id,$this->wizardData->getErrorStatusId());
+            OrderHelper::setOrderComment($plentyOrder->id,
+                "Fehler bei Auftragsexport an Advastore ($response->type)<br>" . implode('<br>',$response->problems));
+        }
 
         return $advastoreOrder;
     }

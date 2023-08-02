@@ -3,6 +3,7 @@
 namespace Advastore\Wizard\Steps;
 
 use Plenty\Modules\Order\Status\Contracts\OrderStatusRepositoryContract;
+use Plenty\Modules\User\Contracts\UserRepositoryContract;
 
 class OrderSteps
 {
@@ -13,13 +14,28 @@ class OrderSteps
             "description" => 'Wizard.order.description',
             "sections" => [
                 [
-                    "title" => 'Wizard.order.sections.title',
+                    "title" => 'Wizard.order.title',
                     "form" => [
                         'statusId' => [
                             'type' => 'select',
                             'options' => [
-                                "name" => "Status",
+                                "name" => "Wizard.order.success.status",
                                 "listBoxValues" => $this->buildOrderStatusList()
+                            ]
+                        ],
+                        'errorStatusId' => [
+                            'type' => 'select',
+                            'options' => [
+                                "name" => "Wizard.order.error.status",
+                                "listBoxValues" => $this->buildOrderStatusList()
+                            ]
+                        ],
+                        "noticeUserId" => [
+                            'type' => 'select',
+                            'defaultValue' => false,
+                            'options' => [
+                                'name' => 'Wizard.order.notice.user',
+                                'listBoxValues' => $this->generateUserListBoxValues()
                             ]
                         ]
                     ]
@@ -41,5 +57,23 @@ class OrderSteps
         }
 
         return $result ?? [];
+    }
+
+    private function generateUserListBoxValues(): array
+    {
+        /** @var UserRepositoryContract $repo */
+        $repo = pluginApp(UserRepositoryContract::class);
+
+        $listBoxValues = [];
+
+        foreach ($repo->getAll() as $user)
+        {
+            $listBoxValues[] = [
+                'value'   => $user->id,
+                'caption' => $user->realName. ' ('.$user->user.') '
+            ];
+        }
+
+        return $listBoxValues;
     }
 }
