@@ -41,7 +41,14 @@ class OrderExport
     public function export(plentyOrder $plentyOrder): advastoreOrder
     {
         $advastoreOrder = $this->orderBuilder->buildOrder($plentyOrder);
-        $response = $this->webservice->sendOrder($advastoreOrder);
+        try {
+            $response = $this->webservice->sendOrder($advastoreOrder);
+        } catch(Exception $e) {
+            OrderHelper::setOrderStatus($plentyOrder->id,$this->wizardData->getErrorStatusId());
+            OrderHelper::setOrderComment($plentyOrder->id,
+                "Fehler bei Auftragsexport an Advastore <br>" . $e->getMessage());
+            return $advastoreOrder;
+        }
 
         if($response->requestId)
         {
