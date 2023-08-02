@@ -72,6 +72,8 @@ class WebserviceMethods extends Dispatcher
 //          'webHookUrl' => $webHookUrl
 //        ];
 
+        // Here it should be get instead of put. Response contains DeliveryAreaCategories and IpWhitelist, these have to be stored in config or somewhere else.
+        // If it is not 200 => apiKey should be deleted, so we can try again without any help from the shop owner.
         return $this->get($request);
     }
 
