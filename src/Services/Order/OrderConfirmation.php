@@ -42,6 +42,7 @@ class OrderConfirmation
      */
     public function handle(): string
     {
+        $this->getLogger('ProcessAdvaOrder')->debug(Settings::PLUGIN_NAME.'::Cronjob starting...');
         foreach ($this->getPlentyOrders() as $plentyOrders) {
             /** @var PlentyOrder $plentyOrder */
             foreach ($plentyOrders as $plentyOrder)
