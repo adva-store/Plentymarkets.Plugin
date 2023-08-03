@@ -46,7 +46,7 @@ class OrderExport
         try {
             $response = $this->webservice->sendOrder($advastoreOrder);
 
-            $this->getLogger('ProcessAdvaOrder')->debug(Settings::PLUGIN_NAME.'::Logger.done',$response);
+            $this->getLogger('ProcessAdvaOrderExport')->debug(Settings::PLUGIN_NAME.'::Logger.done',$response);
 
             if ($response->requestId) {
                 OrderHelper::setExternalOrderId($plentyOrder->id, $response->requestId);
