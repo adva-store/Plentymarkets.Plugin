@@ -2,6 +2,7 @@
 
 namespace Advastore\Services\Order;
 
+use Advastore\Config\Settings;
 use Advastore\Config\WizardData;
 use Advastore\Helper\OrderHelper;
 use Advastore\Models\Advastore\Order as advastoreOrder;
@@ -44,6 +45,8 @@ class OrderExport
 
         try {
             $response = $this->webservice->sendOrder($advastoreOrder);
+
+            $this->getLogger('ProcessAdvaOrder')->debug(Settings::PLUGIN_NAME.'::Logger.done',$response);
 
             if ($response->requestId) {
                 OrderHelper::setExternalOrderId($plentyOrder->id, $response->requestId);
