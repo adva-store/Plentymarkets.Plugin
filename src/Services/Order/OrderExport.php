@@ -47,10 +47,10 @@ class OrderExport
             $response = $this->webservice->sendOrder($advastoreOrder);
 
             $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME.'::Logger.debug',$response);
-            $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME.'::Logger.debug',$response->requestId);
+            $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME.'::Logger.debug',$response->orderId);
 
-            if ($response->requestId) {
-                OrderHelper::setExternalOrderId($plentyOrder->id, $response->requestId);
+            if ($response->orderId) {
+                OrderHelper::setExternalOrderId($plentyOrder->id, $response->orderId);
                 OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getStatusId());
             } else {
                 OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getErrorStatusId());
