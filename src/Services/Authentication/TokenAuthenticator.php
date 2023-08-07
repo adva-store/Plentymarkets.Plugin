@@ -35,7 +35,7 @@ class TokenAuthenticator
      * @param string $token
      * @return bool
      */
-    public function doAuth(string $token): bool
+    public function checkTokenAuth(string $token): bool
     {
         $isGetConfig = $this->request->get(Settings::URL_PARAMETER)===Settings::WEBHOOK_INVOKE_UPDATE_CONFIG;
 

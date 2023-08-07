@@ -56,23 +56,17 @@ class WebserviceMethods extends Dispatcher
     }
 
     /**
-     * Send configuration data to the Advastore API.
+     * Get configuration data to the Advastore API.
      *
-     * @param mixed $merchantId The merchant ID for the configuration.
-     * @param string $webHookUrl The web hook URL for the configuration.
      * @return mixed Returns the response from the API.
      * @throws Exception
      */
-    public function sendConfig(mixed $merchantId, string $webHookUrl): mixed
+    public function getConfig(): mixed
     {
         $request = pluginApp(RequestModel::class);
         $request->requestURL = Settings::ENDPOINT_CONFIG;
-        $request->postfields = [
-          'merchantId' => $merchantId,
-          'webHookUrl' => $webHookUrl
-        ];
 
-        return $this->put($request);
+        return $this->get($request);
     }
 
     /**

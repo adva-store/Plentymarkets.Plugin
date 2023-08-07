@@ -2,6 +2,7 @@
 
 namespace Advastore\Config;
 
+use Plenty\Modules\Order\Property\Contracts\OrderPropertyRepositoryContract;
 use Plenty\Modules\Order\Referrer\Contracts\OrderReferrerRepositoryContract;
 
 /**
@@ -58,5 +59,22 @@ class Settings
         }
 
         return  0;
+    }
+
+    public static function getOrderPropertyTypeId(): int
+    {
+        $repo = pluginApp(OrderPropertyRepositoryContract::class);
+
+        $entries = $repo->getTypes(['de']);
+
+        foreach ($entries->toArray() as $entry)
+        {
+            if($entry['names'][0]['name'] === Settings::PLUGIN_NAME)
+            {
+                return $entry['id'];
+            }
+        }
+
+        return 0;
     }
 }

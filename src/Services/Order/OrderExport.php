@@ -6,10 +6,10 @@ use Advastore\Config\WizardData;
 use Advastore\Helper\OrderHelper;
 use Advastore\Models\Advastore\Order as advastoreOrder;
 use Advastore\Services\Rest\WebserviceMethods;
+use Exception;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Order as plentyOrder;
 use Plenty\Plugin\Log\Loggable;
-use Exception;
 
 /**
  * Class OrderExport
@@ -47,6 +47,7 @@ class OrderExport
         {
             OrderHelper::setExternalOrderId($plentyOrder->id,$response->requestId);
             OrderHelper::setOrderStatus($plentyOrder->id,$this->wizardData->getStatusId());
+            OrderHelper::setOrderComment($plentyOrder->id, "Auftrag exportiert an Advastore ($response->requestId)");
         }
         else
         {

@@ -2,9 +2,9 @@
 
 namespace Advastore\Migrations;
 
+use Advastore\Config\Settings;
 use Plenty\Modules\Order\Referrer\Contracts\OrderReferrerRepositoryContract;
 use Plenty\Plugin\Log\Loggable;
-use Advastore\Config\Settings;
 
 /**
  * Class CreateReferrer
@@ -30,9 +30,9 @@ class CreateReferrer
                     'isEditable' => false,
                     'isFilterable' => true
                 ]);
+            return 'Referrer created!';
         }
-
-        return 'Done!';
+        return 'Referrer already exits!';
     }
 }
 

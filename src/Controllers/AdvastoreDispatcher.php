@@ -4,9 +4,10 @@ namespace Advastore\Controllers;
 
 use Advastore\Config\Settings;
 use Advastore\Config\WizardData;
-use Advastore\Services\Config\AdvastoreConfig;
+use Advastore\Services\Authentication\RemoteAddressAuthenticator;
 use Advastore\Services\Products\ProductExport;
 use Advastore\Services\Products\StockImport;
+use Advastore\Services\Rest\WebserviceMethods;
 use Exception;
 use Plenty\Plugin\Http\Request;
 use Plenty\Plugin\Http\Response;
@@ -124,20 +125,28 @@ class AdvastoreDispatcher
 
     /**
      * Handles a request to update configuration.
+     * Responsible for retrieving ip whitelist
      *
      * @return Response indicating the status of the operation.
      * @throws Exception
      */
     private function handleConfigUpdate(): Response
     {
-        $service    = pluginApp(AdvastoreConfig::class);
+        $webService = pluginApp(WebserviceMethods::class);
         $wizardData = pluginApp(WizardData::class);
+        $remoteAuth = pluginApp(RemoteAddressAuthenticator::class);
 
         if($wizardData->getSettings())
         {
-            $service->sendConfig($wizardData->getMerchantId());
+            if($config = $webService->getConfig()) {
+                $this->getLogger('Config update')->report(Settings::PLUGIN_NAME.'::Logger.report',$config);
+                if($config->ipWhitelist) {
+                    $remoteAuth->createNewAuth($config->ipWhitelist);
+                    return $this->response->make('OK');
+                }
+            }
 
-            return $this->response->make('OK');
+            return $this->response->make('Whitelist was not found!',Response::HTTP_NOT_ACCEPTABLE);
         }
 
         return $this->response->make('Plugin wizard was not completed!',Response::HTTP_NOT_ACCEPTABLE);

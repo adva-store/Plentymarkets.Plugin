@@ -3,10 +3,13 @@
 namespace Advastore\Controllers;
 
 use Advastore\Config\Settings;
+use Advastore\Migrations\CreateOrderProperties;
+use Advastore\Migrations\CreateReferrer;
 use Advastore\Services\Products\ProductExport;
 use Plenty\Modules\Document\Contracts\DocumentRepositoryContract;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 /**
  * Class AdvastoreController
@@ -67,6 +70,15 @@ class AdvastoreController extends Controller
         return $this->response->make($data, 200, [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="' . Settings::PRODUCT_EXPORT_FILENAME . '"',
+        ]);
+    }
+
+    /** @noinspection PhpUnused */
+    public function runMigrations(): SymfonyResponse
+    {
+        return $this->response->json([
+            'orderProperty' => pluginApp(CreateOrderProperties::class)->run(),
+            'orderReferer'  => pluginApp(CreateReferrer::class)->run()
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Advastore\Helper;
 
+use Advastore\Config\Settings;
 use Advastore\Config\WizardData;
 use Plenty\Modules\Account\Address\Models\Address;
 use Plenty\Modules\Comment\Contracts\CommentRepositoryContract;
@@ -9,7 +10,6 @@ use Plenty\Modules\Comment\Models\Comment;
 use Plenty\Modules\Order\Address\Contracts\OrderAddressRepositoryContract;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Order;
-use Plenty\Modules\Order\Property\Models\OrderPropertyType;
 use Plenty\Modules\Order\RelationReference\Models\OrderRelationReference;
 use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Order\Shipping\Package\Contracts\OrderShippingPackageRepositoryContract;
@@ -115,7 +115,7 @@ class OrderHelper
     {
         pluginApp(OrderRepositoryContract::class)->update($orderId,[
             'properties' => [[
-                "typeId" => OrderPropertyType::EXTERNAL_ORDER_ID,
+                "typeId" => Settings::getOrderPropertyTypeId(),
                 "value" => $externalOrderId
             ]]
         ]);
@@ -132,9 +132,10 @@ class OrderHelper
 	 */
     public static function getExternalOrderId(array $orderArray):string|bool
     {
+        $typeId = Settings::getOrderPropertyTypeId();
         foreach ($orderArray['properties'] as $property)
         {
-            if($property['typeId'] === OrderPropertyType::EXTERNAL_ORDER_ID) {
+            if($property['typeId'] === $typeId) {
                 return $property['value'];
             }
         }

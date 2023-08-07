@@ -573,7 +573,37 @@
 			"response": []
 		},
 		{
-			"name": "Debug  | Wizard | Reset",
+			"name": "Debug  | Whitelist",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook/debug/whitelist",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook",
+						"debug",
+						"whitelist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Wizard",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -619,7 +649,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/rest/advahook/debug/order/confirmation",
+					"raw": "{{url}}/rest/advahook/debug/authtoken/delete",
 					"host": [
 						"{{url}}"
 					],
@@ -627,8 +657,39 @@
 						"rest",
 						"advahook",
 						"debug",
-						"order",
-						"confirmation"
+						"authtoken",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Whitelist",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rest/advahook/debug/whitelist/delete",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rest",
+						"advahook",
+						"debug",
+						"whitelist",
+						"delete"
 					]
 				}
 			},

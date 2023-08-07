@@ -39,7 +39,7 @@ class TokenAuth extends Middleware
     {
         $token = $request->get('token');
 
-        if(!$token || !$this->tokenAuthenticator->doAuth($token)) {
+        if(!$token || !$this->tokenAuthenticator->checkTokenAuth($token)) {
             header("HTTP/1.1 401 Unauthorized");
             die('401 Unauthorized - Please go away!');
         }
