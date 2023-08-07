@@ -22,6 +22,7 @@ class Settings
     const PRODUCT_EXPORT_FILENAME = 'products.csv';
 
     const ENDPOINT_ORDER    = 'v1/orders/validate-and-confirm';
+    const ENDPOINT_ORDER_STATUS    = 'v1/orders';
     const ENDPOINT_STOCK    = 'v1/stocks';
     const ENDPOINT_CONFIG   = 'v1/config';
 
