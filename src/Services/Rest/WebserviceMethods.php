@@ -79,7 +79,7 @@ class WebserviceMethods extends Dispatcher
     public function getShipmentInformation(string $advastoreOrderId): mixed
     {
         $request = pluginApp(RequestModel::class);
-        $request->requestURL = Settings::ENDPOINT_ORDER.'/'. $advastoreOrderId;
+        $request->requestURL = Settings::ENDPOINT_ORDER_STATUS.'/'. $advastoreOrderId;
 
         return $this->get($request);
     }
