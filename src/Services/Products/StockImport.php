@@ -61,7 +61,7 @@ class StockImport
             $this->variationStockRepository->correctStock($variationId,[
                 'quantity' => (float) $stockQuantity,
                 'warehouseId' => $this->wizardData->getWarehouseId(),
-                'storageLocationId' => 0, // Standard-Lagerort
+                'storageLocationId' => 0, // Standard-Lagerort TODO: storage location should be configurable
                 'reasonId' => 301
             ]);
         }
