@@ -44,7 +44,7 @@ class WebserviceMethods extends Dispatcher
     public function getStocks(): Generator
     {
         $request = pluginApp(RequestModel::class);
-        $request->requestURL = Settings::ENDPOINT_STOCK . "?start=1&limit=50";
+        $request->requestURL = Settings::ENDPOINT_STOCK . "?start=0&limit=50";
 
         while ($request->requestURL)
         {
