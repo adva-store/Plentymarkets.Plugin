@@ -43,11 +43,11 @@ class OrderExport
         $advastoreOrder = $this->orderBuilder->buildOrder($plentyOrder);
         $response = $this->webservice->sendOrder($advastoreOrder);
 
-        if($response->requestId)
+        if($response->orderId)
         {
-            OrderHelper::setExternalOrderId($plentyOrder->id,$response->requestId);
+            OrderHelper::setExternalOrderId($plentyOrder->id,$response->orderId);
             OrderHelper::setOrderStatus($plentyOrder->id,$this->wizardData->getStatusId());
-            OrderHelper::setOrderComment($plentyOrder->id, "Auftrag exportiert an Advastore ($response->requestId)");
+            OrderHelper::setOrderComment($plentyOrder->id, "Auftrag exportiert an Advastore ($response->orderId)");
         }
         else
         {
