@@ -2,6 +2,7 @@
 
 namespace Advastore\Services\Order;
 
+use Advastore\Config\Settings;
 use Advastore\Config\WizardData;
 use Advastore\Helper\OrderHelper;
 use Advastore\Models\Advastore\Order as advastoreOrder;
@@ -40,20 +41,27 @@ class OrderExport
      */
     public function export(plentyOrder $plentyOrder): advastoreOrder
     {
-        $advastoreOrder = $this->orderBuilder->buildOrder($plentyOrder);
-        $response = $this->webservice->sendOrder($advastoreOrder);
+        try {
+            $advastoreOrder = $this->orderBuilder->buildOrder($plentyOrder);
+            $response = $this->webservice->sendOrder($advastoreOrder);
 
-        if($response->orderId)
-        {
-            OrderHelper::setExternalOrderId($plentyOrder->id,$response->orderId);
-            OrderHelper::setOrderStatus($plentyOrder->id,$this->wizardData->getStatusId());
-            OrderHelper::setOrderComment($plentyOrder->id, "Auftrag exportiert an Advastore ($response->orderId)");
-        }
-        else
-        {
-            OrderHelper::setOrderStatus($plentyOrder->id,$this->wizardData->getErrorStatusId());
+            $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME.'::Logger.debug',$response);
+            $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME.'::Logger.debug',$response->orderId);
+
+            if ($response->orderId) {
+                OrderHelper::setExternalOrderId($plentyOrder->id, $response->orderId);
+                OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getStatusId());
+                OrderHelper::setOrderComment($plentyOrder->id, "Auftrag exportiert an Advastore ($response->orderId)");
+            } else {
+                OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getErrorStatusId());
+                OrderHelper::setOrderComment($plentyOrder->id,
+                    "Fehler bei Auftragsexport an Advastore ($response->type)<br>" . implode('<br>', $response->problems));
+            }
+        } catch (Exception $e) {
+            OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getErrorStatusId());
             OrderHelper::setOrderComment($plentyOrder->id,
-                "Fehler bei Auftragsexport an Advastore ($response->type)<br>" . implode('<br>',$response->problems));
+                "Fehler bei Auftragsexport an Advastore ($response->type)<br>" . $e->getMessage());
+            return $advastoreOrder;
         }
 
         return $advastoreOrder;
