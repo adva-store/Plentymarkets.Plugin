@@ -57,6 +57,7 @@ class OrderConfirmation
                             OrderHelper::setShippingPackage($plentyOrder['id'],$parcel->trackingNumber);
                         }
                         OrderHelper::setOrderStatus($plentyOrder['id'],Settings::STATUS_BOOK_OUTGOING_STOCK);
+                        // TODO: According to our first merchant, there should also be a "book out" at this point, because the status update is probably not enough to make it work in all systems
                     }
                 }
             }
