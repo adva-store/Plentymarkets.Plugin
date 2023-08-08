@@ -17,12 +17,13 @@ class Settings
     const URL_PREFIX    = 'advahook';
     CONST URL_PARAMETER = 'process';
 
-    const URL_PROD    =  '';
+    const URL_PROD    =  'https://api.advastore.com/';
     const URL_DEV     = 'https://sandbox.advaapi.com/';
 
     const PRODUCT_EXPORT_FILENAME = 'products.csv';
 
-    const ENDPOINT_ORDER    = 'v1/orders';
+    const ENDPOINT_ORDER    = 'v1/orders/validate-and-confirm';
+    const ENDPOINT_ORDER_STATUS    = 'v1/orders';
     const ENDPOINT_STOCK    = 'v1/stocks';
     const ENDPOINT_CONFIG   = 'v1/config';
 

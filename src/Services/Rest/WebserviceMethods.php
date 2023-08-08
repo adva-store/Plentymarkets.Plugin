@@ -44,7 +44,7 @@ class WebserviceMethods extends Dispatcher
     public function getStocks(): Generator
     {
         $request = pluginApp(RequestModel::class);
-        $request->requestURL = Settings::ENDPOINT_STOCK . "?start=1&limit=50";
+        $request->requestURL = Settings::ENDPOINT_STOCK . "?start=0&limit=50";
 
         while ($request->requestURL)
         {
@@ -79,7 +79,7 @@ class WebserviceMethods extends Dispatcher
     public function getShipmentInformation(string $advastoreOrderId): mixed
     {
         $request = pluginApp(RequestModel::class);
-        $request->requestURL = Settings::ENDPOINT_ORDER.'/'. $advastoreOrderId;
+        $request->requestURL = Settings::ENDPOINT_ORDER_STATUS.'/'. $advastoreOrderId;
 
         return $this->get($request);
     }
