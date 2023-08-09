@@ -27,7 +27,7 @@ class CredentialsStep
                         ],
                         "sandBoxToken" => [
                             "isVisible" => "isTesting",
-                            "type" => "number",
+                            "type" => "text",
                             "minValue" => 2,
                             "options" => [
                                 "required"  => "isTesting",

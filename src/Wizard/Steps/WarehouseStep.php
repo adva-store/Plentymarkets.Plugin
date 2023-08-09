@@ -34,7 +34,7 @@ class WarehouseStep
                             ]
                         ],
                         "storageLocationId" => [
-                            "type" => "text",
+                            "type" => "number",
                             "isVisible" => "!useDefaultStorageLocation",
                             "options"  => [
                                 "required" =>  "!useDefaultStorageLocation",
