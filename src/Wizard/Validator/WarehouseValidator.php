@@ -19,18 +19,15 @@ class WarehouseValidator extends Validator
      */
     public static function validateOrFail(array $data): void
     {
-        pluginApp(WarehouseValidator::class)
-            ->getLogger('debug validator')->error('debug',$data);
-
-        $repo = pluginApp(StorageLocationManagementRepositoryContract::class);
+        $storageRepo = pluginApp(StorageLocationManagementRepositoryContract::class);
 
         try {
-            $storageLocation = $repo->getStorageLocationById($data['storageLocationId']);
+            $storageLocation = $storageRepo->getStorageLocationById($data['storageLocationId']);
         }
         /** @noinspection PhpUnusedLocalVariableInspection */
         catch (Exception $e) {}
 
-        if($storageLocation->id && $storageLocation->warehouseId===$data['warehouse']) {
+        if(!$data['useDefaultStorageLocation'] && $storageLocation->warehouseId===$data['warehouse']) {
             $data['validWarehouse'] = true;
         }
 

@@ -90,6 +90,15 @@ class WizardData extends WizardDataHandler
         return $this->settings['warehouse'] ?? 0;
     }
 
+    public function getStorageLocationId(): int
+    {
+        if($this->settings['useDefaultStorageLocation']) {
+            return 0; // ID of "Standard-Lagerort"
+        }
+
+        return (int)$this->settings['storageLocationId'];
+    }
+
     /**
      * Get the status ID.
      *
