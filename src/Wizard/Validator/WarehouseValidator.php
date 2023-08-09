@@ -4,10 +4,13 @@ namespace Advastore\Wizard\Validator;
 
 use Exception;
 use Plenty\Modules\StockManagement\Warehouse\Management\Contracts\StorageLocationManagementRepositoryContract;
+use Plenty\Plugin\Log\Loggable;
 use Plenty\Validation\Validator;
 
 class WarehouseValidator extends Validator
 {
+    use Loggable;
+
     /**
      * Validates the provided data or fails if validation doesn't pass.
      *
@@ -16,6 +19,9 @@ class WarehouseValidator extends Validator
      */
     public static function validateOrFail(array $data): void
     {
+        pluginApp(WarehouseValidator::class)
+            ->getLogger('debug validator')->error('debug',$data);
+
         $repo = pluginApp(StorageLocationManagementRepositoryContract::class);
 
         try {
