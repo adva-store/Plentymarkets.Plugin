@@ -36,8 +36,8 @@ class WarehouseStep
                         "storageLocationId" => [
                             "type" => "text",
                             "isVisible" => "!useDefaultStorageLocation",
-                            "required" =>  "!useDefaultStorageLocation",
                             "options"  => [
+                                "required" =>  "!useDefaultStorageLocation",
                                 "name" => "Wizard.warehouse.storageLocationId"
                             ]
                         ]
