@@ -27,8 +27,9 @@ class WarehouseStep
                         ],
                         "useDefaultStorageLocation" => [
                             "type" => "toggle",
+                            "defaultValue" => true,
                             "options" => [
-                                "name" => "Wizard.credentials.useDefaultStorageLocation",
+                                "name" => "Wizard.warehouse.useDefaultStorageLocation",
                                 "defaultValue" => true
                             ]
                         ],
