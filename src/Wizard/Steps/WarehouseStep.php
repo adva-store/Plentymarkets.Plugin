@@ -2,6 +2,7 @@
 
 namespace Advastore\Wizard\Steps;
 
+use Advastore\Wizard\Validator\WarehouseValidator;
 use Plenty\Modules\Warehouse\Contracts\WarehouseRepositoryContract;
 use Plenty\Modules\Warehouse\Models\Warehouse;
 
@@ -12,6 +13,7 @@ class WarehouseStep
         return [
             "title" => "Wizard.warehouse.title",
             "description" => 'Wizard.warehouse.description',
+            "validationClass" => WarehouseValidator::class,
             "sections" => [
                 [
                     "title" => 'Wizard.warehouse.title',
@@ -21,6 +23,20 @@ class WarehouseStep
                             'options' => [
                                 "name" => "Wizard.warehouse.title",
                                 "listBoxValues" => $this->buildWarehouseCheckBoxValues()
+                            ]
+                        ],
+                        "useDefaultStorageLocation" => [
+                            "type" => "toggle",
+                            "options" => [
+                                "name" => "Wizard.credentials.useDefaultStorageLocation",
+                                "defaultValue" => true
+                            ]
+                        ],
+                        'storageLocationId' => [
+                            'isVisible' => '!useDefaultStorageLocation',
+                            'type' => 'text',
+                            'options' => [
+                                "name" => "Wizard.warehouse.storageLocationId"
                             ]
                         ]
                     ]
