@@ -12,15 +12,15 @@ class WarehouseStep
     {
         return [
             "title" => "Wizard.warehouse.title",
-            "description" => 'Wizard.warehouse.description',
+            "description" => "Wizard.warehouse.description",
             "validationClass" => WarehouseValidator::class,
             "sections" => [
                 [
-                    "title" => 'Wizard.warehouse.title',
+                    "title" => "Wizard.warehouse.title",
                     "form" => [
-                        'warehouse' => [
-                            'type' => 'select',
-                            'options' => [
+                        "warehouse" => [
+                            "type" => "select",
+                            "options" => [
                                 "name" => "Wizard.warehouse.title",
                                 "listBoxValues" => $this->buildWarehouseCheckBoxValues()
                             ]
@@ -33,10 +33,11 @@ class WarehouseStep
                                 "defaultValue" => true
                             ]
                         ],
-                        'storageLocationId' => [
-                            'isVisible' => '!useDefaultStorageLocation',
-                            'type' => 'text',
-                            'options' => [
+                        "storageLocationId" => [
+                            "type" => "text",
+                            "isVisible" => "!useDefaultStorageLocation",
+                            "required" =>  "!useDefaultStorageLocation",
+                            "options"  => [
                                 "name" => "Wizard.warehouse.storageLocationId"
                             ]
                         ]
