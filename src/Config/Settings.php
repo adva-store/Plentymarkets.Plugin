@@ -17,8 +17,8 @@ class Settings
     const URL_PREFIX    = 'advahook';
     CONST URL_PARAMETER = 'process';
 
-    const URL_PROD    =  'https://api.advastore.com/';
-    const URL_DEV     = 'https://sandbox.advaapi.com/';
+    const URL_PROD    =  'https://4dd1-88-133-166-32.ngrok-free.app/';
+    const URL_DEV     = 'https://4dd1-88-133-166-32.ngrok-free.app/';
 
     const PRODUCT_EXPORT_FILENAME = 'products.csv';
 
