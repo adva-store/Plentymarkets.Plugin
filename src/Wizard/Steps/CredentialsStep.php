@@ -6,17 +6,16 @@ class CredentialsStep
     {
         return [
             "title" => "Wizard.credentials.title",
-            "description" => 'Wizard.credentials.description',
+            "description" => "Wizard.credentials.description",
             "sections" => [
                 [
-                    "title" => 'Wizard.credentials.title',
+                    "title" => "Wizard.credentials.title",
                     "form" => [
                         "merchantId" => [
-                            'type' => 'text',
-                            'minValue' => 2,
-                            "required"  => true,
-                            'options' => [
-                                'name' => 'Wizard.credentials.merchantId',
+                            "type" => "text",
+                            "minValue" => 2,
+                            "options" => [
+                                "name" => "Wizard.credentials.merchantId",
                             ]
                         ],
                         "isTesting" => [
@@ -27,12 +26,12 @@ class CredentialsStep
                             ]
                         ],
                         "sandBoxToken" => [
-                            'isVisible' => 'isTesting',
-                            'type' => 'text',
-                            'minValue' => 2,
-                            "required"  => true,
-                            'options' => [
-                                'name' => 'Wizard.credentials.sandboxtoken',
+                            "isVisible" => "isTesting",
+                            "type" => "text",
+                            "minValue" => 2,
+                            "options" => [
+                                "required"  => "isTesting",
+                                "name" => "Wizard.credentials.sandboxtoken",
                             ]
                         ]
                     ]

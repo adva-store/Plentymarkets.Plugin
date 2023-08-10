@@ -91,6 +91,22 @@ class WizardData extends WizardDataHandler
     }
 
     /**
+     * Get the storage location ID. If the 'useDefaultStorageLocation' setting is true,
+     * it will return the ID for "Standard-Lagerort". Otherwise, it returns the ID specified
+     * in the 'storageLocationId' setting.
+     *
+     * @return int The storage location ID.
+     */
+    public function getStorageLocationId(): int
+    {
+        if($this->settings['useDefaultStorageLocation']) {
+            return 0; // ID of "Standard-Lagerort"
+        }
+
+        return (int)$this->settings['storageLocationId'];
+    }
+
+    /**
      * Get the status ID.
      *
      * @return float Returns the status ID.
