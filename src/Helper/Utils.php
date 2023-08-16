@@ -21,7 +21,7 @@ class Utils
     {
         if (is_array($arrayOrObject)) {
             $filtered = array_filter(
-                $arrayOrObject,
+                (array)$arrayOrObject,
                 fn($x) => $x[$key] === $value
             );
         } elseif (is_object($arrayOrObject)) {
