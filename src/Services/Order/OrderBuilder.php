@@ -79,7 +79,7 @@ class OrderBuilder
             'toArray' => $plentyAddress->toArray(),
             '$postNumber' => array_filter($postNumber)
         ]);
-        $postNumber = ($postNumber) ? array_filter($postNumber)[0]['value'] :'';
+        $postNumber = ($postNumber) ? array_filter($postNumber)[1]['value'] :false;
 
         $customerAddress
             ->setCompanyName($plentyAddress->companyName)
