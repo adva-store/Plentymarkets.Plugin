@@ -22,7 +22,7 @@ class Utils
         if (is_array($arrayOrObject)) {
             $filtered = array_filter(
                 (array)$arrayOrObject,
-                fn($x) => $x[$key] === $value
+                fn($x) => (array)$x[$key] === $value
             );
         } elseif (is_object($arrayOrObject)) {
             $arrayOrObject = json_decode(json_encode($arrayOrObject),true);
