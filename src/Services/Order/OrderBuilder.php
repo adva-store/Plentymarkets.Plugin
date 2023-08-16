@@ -77,9 +77,9 @@ class OrderBuilder
         $postNumber = array_filter($plentyAddress->toArray()['options'],fn($x)=>$x['typeId']===AddressOption::TYPE_POST_NUMBER);
         $this->getLogger('debug shizzel')->error('debug',[
             'toArray' => $plentyAddress->toArray(),
-            '$postNumber' => $postNumber
+            '$postNumber' => array_filter($postNumber)
         ]);
-        $postNumber = ($postNumber) ? reset($postNumber)[0]['value'] :'';
+        $postNumber = ($postNumber) ? array_filter($postNumber)[0]['value'] :'';
 
         $customerAddress
             ->setCompanyName($plentyAddress->companyName)
