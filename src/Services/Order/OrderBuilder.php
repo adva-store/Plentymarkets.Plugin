@@ -90,7 +90,7 @@ class OrderBuilder
             ->setCity($plentyAddress->town)
             ->setPostalCode($plentyAddress->postalCode)
             ->setCountryIsoCode(OrderHelper::getISOCode($plentyAddress->countryId))
-            ->setAdditionToAddress($plentyAddress->additional.' '.$postNumber)
+            ->setAdditionToAddress($postNumber??$plentyAddress->additional)
             ->setPhoneNumber($plentyAddress->phone);
 
         return $customerAddress;
