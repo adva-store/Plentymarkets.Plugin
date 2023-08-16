@@ -3,7 +3,6 @@
 namespace Advastore\Services\Order;
 
 use Advastore\Helper\OrderHelper;
-use Advastore\Helper\Utils;
 use Advastore\Models\Advastore\CustomerAddress;
 use Advastore\Models\Advastore\Order as AdvaStoreOrder;
 use Advastore\Models\Advastore\OrderPosition;
@@ -72,7 +71,8 @@ class OrderBuilder
         $customerAddress = pluginApp(CustomerAddress::class);
 
         // Find in options
-        $postNumber = Utils::findFirst($plentyAddress->options,'typeId',AddressOption::TYPE_POST_NUMBER);
+        $postNumber = array_filter($plentyAddress->options,fn($x)=>$x->typeId===AddressOption::TYPE_POST_NUMBER);
+        $postNumber = ($postNumber) ? reset($postNumber)[0]->value :'';
 
         $customerAddress
             ->setCompanyName($plentyAddress->companyName)
