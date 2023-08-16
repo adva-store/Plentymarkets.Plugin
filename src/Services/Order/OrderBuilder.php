@@ -71,7 +71,7 @@ class OrderBuilder
         $customerAddress = pluginApp(CustomerAddress::class);
 
         // Find in options
-        $postNumber = array_filter((array)$plentyAddress->options,fn($x)=>$x['typeId']===AddressOption::TYPE_POST_NUMBER);
+        $postNumber = array_filter($plentyAddress->toArray()['options'],fn($x)=>$x['typeId']===AddressOption::TYPE_POST_NUMBER);
         $postNumber = ($postNumber) ? reset($postNumber)[0]['value'] :'';
 
         $customerAddress
