@@ -21,8 +21,8 @@ class Utils
     {
         if (is_array($arrayOrObject)) {
             $filtered = array_filter(
-                $arrayOrObject,
-                fn($x) => $x[$key] === $value
+                (array)$arrayOrObject,
+                fn($x) => (array)$x[$key] === $value
             );
         } elseif (is_object($arrayOrObject)) {
             $arrayOrObject = json_decode(json_encode($arrayOrObject),true);

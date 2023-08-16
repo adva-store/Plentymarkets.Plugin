@@ -6,9 +6,11 @@ use Advastore\Helper\OrderHelper;
 use Advastore\Models\Advastore\CustomerAddress;
 use Advastore\Models\Advastore\Order as AdvaStoreOrder;
 use Advastore\Models\Advastore\OrderPosition;
+use Plenty\Modules\Account\Address\Models\AddressOption;
 use Plenty\Modules\Account\Address\Models\AddressRelationType;
 use Plenty\Modules\Order\Models\Order as PlentyOrder;
 use Plenty\Modules\Order\Models\OrderItemType;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class OrderBuilder
@@ -17,6 +19,8 @@ use Plenty\Modules\Order\Models\OrderItemType;
  */
 class OrderBuilder
 {
+    use Loggable;
+
     /**
      * The allowed order item types for building AdvaStore orders.
      */
@@ -69,6 +73,10 @@ class OrderBuilder
         $plentyAddress   = OrderHelper::getAddress($order,AddressRelationType::DELIVERY_ADDRESS);
         $customerAddress = pluginApp(CustomerAddress::class);
 
+        // Find in options
+        $postNumber = array_filter($plentyAddress->toArray()['options'],fn($x)=>$x['typeId']===AddressOption::TYPE_POST_NUMBER);
+        $postNumber = ($postNumber) ? array_values($postNumber)[0]['value'] :false;
+
         $customerAddress
             ->setCompanyName($plentyAddress->companyName)
             ->setFirstName($plentyAddress->firstName)
@@ -78,7 +86,7 @@ class OrderBuilder
             ->setCity($plentyAddress->town)
             ->setPostalCode($plentyAddress->postalCode)
             ->setCountryIsoCode(OrderHelper::getISOCode($plentyAddress->countryId))
-            ->setAdditionToAddress($plentyAddress->additional)
+            ->setAdditionToAddress($postNumber??$plentyAddress->additional)
             ->setPhoneNumber($plentyAddress->phone);
 
         return $customerAddress;
