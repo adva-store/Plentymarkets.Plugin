@@ -10,6 +10,7 @@ use Plenty\Modules\Account\Address\Models\AddressOption;
 use Plenty\Modules\Account\Address\Models\AddressRelationType;
 use Plenty\Modules\Order\Models\Order as PlentyOrder;
 use Plenty\Modules\Order\Models\OrderItemType;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class OrderBuilder
@@ -18,6 +19,8 @@ use Plenty\Modules\Order\Models\OrderItemType;
  */
 class OrderBuilder
 {
+    use Loggable;
+
     /**
      * The allowed order item types for building AdvaStore orders.
      */
@@ -72,6 +75,10 @@ class OrderBuilder
 
         // Find in options
         $postNumber = array_filter($plentyAddress->toArray()['options'],fn($x)=>$x['typeId']===AddressOption::TYPE_POST_NUMBER);
+        $this->getLogger('debug shizzel')->error('debug',[
+            'toArray' => $plentyAddress->toArray(),
+            '$postNumber' => $postNumber
+        ]);
         $postNumber = ($postNumber) ? reset($postNumber)[0]['value'] :'';
 
         $customerAddress
