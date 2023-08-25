@@ -50,7 +50,10 @@ class OrderConfirmation
                 {
                     $response = $this->webserviceMethods->getShipmentInformation($externalOrderId);
 
-                    if($response->parcels)
+                    if(isset($response->status) &&
+                        strtolower($response->status) == 'fulfilled' &&
+                        is_array($response->parcels) &&
+                        count($response->parcels) > 0)
                     {
                         foreach ($response->parcels as $parcel)
                         {

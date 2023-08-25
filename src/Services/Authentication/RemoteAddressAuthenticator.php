@@ -6,7 +6,7 @@ use Advastore\Config\Settings;
 use Advastore\Config\WizardData;
 use Exception;
 use Plenty\Modules\Plugin\Storage\Contracts\StorageRepositoryContract;
-use Plenty\Plugin\Http\Request;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class TokenAuthenticator
@@ -14,6 +14,8 @@ use Plenty\Plugin\Http\Request;
  */
 class RemoteAddressAuthenticator
 {
+    use Loggable;
+
     /**
      * Constant for auth token filename
      */
@@ -23,7 +25,7 @@ class RemoteAddressAuthenticator
      * TokenAuthenticator constructor.
      *
      * @param StorageRepositoryContract $storageRepository
-     * @param Request $request
+     * @param WizardData $wizardData
      */
     public function __construct(
         private StorageRepositoryContract $storageRepository,
@@ -33,7 +35,7 @@ class RemoteAddressAuthenticator
     /**
      * Checks if the given auth token exists or creates a new one if it doesn't.
      *
-     * @param string $token
+     * @param mixed $remoteAddress
      * @return bool
      */
     public function checkAuth(mixed $remoteAddress): bool
@@ -50,6 +52,7 @@ class RemoteAddressAuthenticator
             return true;
         }
 
+        $this->getLogger('IP Whitelist error')->error('Unauthorized',['IP'=>$remoteAddress]);
         return false;
     }
 
@@ -66,7 +69,7 @@ class RemoteAddressAuthenticator
     /**
      * Creates a new auth token.
      *
-     * @param string $token
+     * @param array $whiteList
      */
     public function createNewAuth(array $whiteList):void
     {
@@ -76,7 +79,7 @@ class RemoteAddressAuthenticator
     /**
      * Checks if the given token matches the saved token.
      *
-     * @param string $token
+     * @param mixed $remoteAddress
      * @return bool
      */
     private function checkRemoteAddress(mixed $remoteAddress): bool
