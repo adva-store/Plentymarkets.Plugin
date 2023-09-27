@@ -68,14 +68,14 @@ class OrderConfirmation
                     }
                     else if (strtolower($response->status) == 'cancelled')
                     {
-                        OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getErrorStatusId());
-                        OrderHelper::setOrderComment($plentyOrder->id,
+                        OrderHelper::setOrderStatus($plentyOrder['id'], $this->wizardData->getErrorStatusId());
+                        OrderHelper::setOrderComment($plentyOrder['id'],
                             "Der Auftrag wurde von Advastore storniert<br>");
                     }
                     else if (strtolower($response->status) == 'completelyfailed')
                     {
-                        OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getErrorStatusId());
-                        OrderHelper::setOrderComment($plentyOrder->id,
+                        OrderHelper::setOrderStatus($plentyOrder['id'], $this->wizardData->getErrorStatusId());
+                        OrderHelper::setOrderComment($plentyOrder['id'],
                             "Der Auftrag konnte von Advastore nicht verarbeitet werden<br>");
                     }
                 }
