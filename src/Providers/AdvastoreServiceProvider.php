@@ -52,7 +52,7 @@ class AdvastoreServiceProvider extends ServiceProvider
         $wizardContainerContract->register(Settings::WIZARD_KEY, AdvastoreWizard::class);
 
         /** Add the OrderConfirmation::class as a cron job to the CronContainer, executed hourly. **/
-        $cronContainer->add(CronContainer::EVERY_FIFTEEN_MINUTES, OrderConfirmation::class);
+        $cronContainer->add(CronContainer::HOURLY, OrderConfirmation::class);
 
         /** Register the "SendOrder" event procedure with the "ProcessAdvaOrder::handle" method in the EventProceduresService. **/
         $eventProceduresService->registerProcedure(
