@@ -46,6 +46,11 @@ class OrderConfirmation
             /** @var PlentyOrder $plentyOrder */
             foreach ($plentyOrders as $plentyOrder)
             {
+                // TODO: quick fix, should be analysed
+                if ($plentyOrder['id'] === null) {
+                    continue;
+                }
+
                 if($externalOrderId = OrderHelper::getExternalOrderId($plentyOrder))
                 {
                     $response = $this->webserviceMethods->getShipmentInformation($externalOrderId);
