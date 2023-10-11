@@ -160,8 +160,7 @@ class AdvastoreDispatcher
      */
     private function handleGetStocks(): Response
     {
-        // todo: Temporarily disabled for Coffeefair. Must be reinstalled later.
-        //pluginApp(StockImport::class)->importStock();
+        pluginApp(StockImport::class)->importStock();
 
         return $this->response->make('OK');
     }
