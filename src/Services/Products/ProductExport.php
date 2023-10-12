@@ -101,6 +101,17 @@ class ProductExport
             {
                 $item = $this->getItemData($variation['itemId'])->toArray();
 
+                $attributeName = '';
+                if(!empty($variation['variationAttributeValues'])) {
+                    foreach ($variation['variationAttributeValues'] as $key => $attributeEntry) {
+                        $attributeName .= $attributeEntry['attribute']['backendName'].':';
+                        $attributeName .= $attributeEntry['attributeValue']['backendName'];
+                        if(count($variation['variationAttributeValues']) > $key+1) {
+                            $attributeName .= ' | ';
+                        }
+                    }
+                }
+
                 $variationsData[] = [
                     'sellerSku'            => $variation['id'],
                     'gtins'                => $variation['variationBarcodes'][0]['code'] ?? ' ',
@@ -111,7 +122,7 @@ class ProductExport
                     'containsBattery'      => ' ',
                     'advaHandling'         => 1,
                     'imageUrl'             => $variation['images'][0]['urlPreview'] ?? ' ',
-                    'sellerSkuName'        => $item['texts'][0]['name1'] ?? ' ',
+                    'sellerSkuName'        => $item['texts'][0]['name1']??''.' '.$attributeName,
                     'sellerSkuDescription' => $item['texts'][0]['shortDescription'] ?? ' '
                 ];
             }
