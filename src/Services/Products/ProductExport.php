@@ -122,9 +122,7 @@ class ProductExport
                     'containsBattery'      => ' ',
                     'advaHandling'         => 1,
                     'imageUrl'             => $variation['images'][0]['urlPreview'] ?? ' ',
-                    'sellerSkuName'        => empty($attributeName)
-                        ? $item['texts'][0]['name1']
-                        : $item['texts'][0]['name1'] . ' ' . $attributeName,
+                    'sellerSkuName'        => ($item['texts'][0]['name1'] ?? '') . ($attributeName ? ' ' . $attributeName : ''),
                     'sellerSkuDescription' => $item['texts'][0]['shortDescription'] ?? ' '
                 ];
             }
