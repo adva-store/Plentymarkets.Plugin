@@ -19,7 +19,7 @@ class RemoteAddressAuthenticator
     /**
      * Constant for auth token filename
      */
-    const AUTH_FILENAME ='remote_address_auth.json';
+    const AUTH_FILENAME = 'remote_address_auth.json';
 
     /**
      * TokenAuthenticator constructor.
@@ -29,8 +29,10 @@ class RemoteAddressAuthenticator
      */
     public function __construct(
         private StorageRepositoryContract $storageRepository,
-        private WizardData $wizardData
-    ){}
+        private WizardData                $wizardData
+    )
+    {
+    }
 
     /**
      * Checks if the given auth token exists or creates a new one if it doesn't.
@@ -40,19 +42,19 @@ class RemoteAddressAuthenticator
      */
     public function checkAuth(mixed $remoteAddress): bool
     {
-        if($this->wizardData->isTesting()) {
+        if ($this->wizardData->isTesting()) {
             return true;
         }
 
-        if(!$this->authExists()) {
+        if (!$this->authExists()) {
             return true;
         }
 
-        if($this->checkRemoteAddress($remoteAddress)) {
+        if ($this->checkRemoteAddress($remoteAddress)) {
             return true;
         }
 
-        $this->getLogger('IP Whitelist error')->error('Unauthorized',['IP'=>$remoteAddress]);
+        $this->getLogger('IP Whitelist error')->error('Unauthorized', ['IP' => $remoteAddress]);
         return false;
     }
 
@@ -71,7 +73,7 @@ class RemoteAddressAuthenticator
      *
      * @param array $whiteList
      */
-    public function createNewAuth(array $whiteList):void
+    public function createNewAuth(array $whiteList): void
     {
         $this->storageRepository->uploadObject(Settings::PLUGIN_NAME, self::AUTH_FILENAME, json_encode($whiteList));
     }
@@ -84,42 +86,45 @@ class RemoteAddressAuthenticator
      */
     private function checkRemoteAddress(mixed $remoteAddress): bool
     {
-        if($this->storageRepository->doesObjectExist(Settings::PLUGIN_NAME,self::AUTH_FILENAME))
-        {
+        if ($this->storageRepository->doesObjectExist(Settings::PLUGIN_NAME, self::AUTH_FILENAME)) {
             $storageObject = $this->storageRepository->getObject(Settings::PLUGIN_NAME, self::AUTH_FILENAME);
-            $whiteList = json_decode($storageObject->body,true);
+            $whiteList = json_decode($storageObject->body, true);
 
-            return in_array($remoteAddress,$whiteList);
+            return in_array($remoteAddress, $whiteList);
         }
 
         return false;
     }
 
-	/**
-	 * Deletes the current AuthToken
-	 *
-	 * @return string
+    /**
+     * Deletes the current AuthToken
+     *
+     * @return string
      * @noinspection PhpUnused
      */
-	public function resetAuth(): string
-	{
-        $this->storageRepository->deleteObject(Settings::PLUGIN_NAME,self::AUTH_FILENAME);
-        return 'DELETED';
-	}
+    public function resetAuth(): string
+    {
+        if ($this->storageRepository->doesObjectExist(Settings::PLUGIN_NAME, self::AUTH_FILENAME)) {
+            $this->storageRepository->deleteObject(Settings::PLUGIN_NAME, self::AUTH_FILENAME);
+            return 'DELETED';
+        }
 
-	/**
-	 * @throws Exception
+        throw new Exception('Whitelist not found!');
+    }
+
+    /**
+     * @throws Exception
      * @noinspection PhpUnused
      */
-	public function getWhitelist()
-	{
+    public function getWhitelist()
+    {
         //$this->getLogger('IP Whitelist info')->info('Get Whitelist called');
 
-		if($this->storageRepository->doesObjectExist(Settings::PLUGIN_NAME,self::AUTH_FILENAME)) {
+        if ($this->storageRepository->doesObjectExist(Settings::PLUGIN_NAME, self::AUTH_FILENAME)) {
             $storageObject = $this->storageRepository->getObject(Settings::PLUGIN_NAME, self::AUTH_FILENAME);
             return $storageObject->body;
-		}
+        }
 
-		throw new Exception('Whitelist not found!');
-	}
+        throw new Exception('Whitelist not found!');
+    }
 }
