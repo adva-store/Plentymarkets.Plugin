@@ -99,8 +99,12 @@ class TokenAuthenticator
      */
 	public function resetAuthToken(): string
 	{
-		$this->storageRepository->deleteObject(Settings::PLUGIN_NAME,self::AUTH_FILENAME);
-		return 'DELETED';
+        if($this->storageRepository->doesObjectExist(Settings::PLUGIN_NAME,self::AUTH_FILENAME)) {
+            $this->storageRepository->deleteObject(Settings::PLUGIN_NAME, self::AUTH_FILENAME);
+            return 'DELETED';
+        }
+
+        throw new Exception('No saved token!');
 	}
 
 	/**
