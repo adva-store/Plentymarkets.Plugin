@@ -119,6 +119,8 @@ class RemoteAddressAuthenticator
      */
 	public function getWhitelist()
 	{
+        $this->getLogger('IP Whitelist info')->info('Get Whitelist called');
+
 		if($this->storageRepository->doesObjectExist(Settings::PLUGIN_NAME,self::AUTH_FILENAME)) {
             $storageObject = $this->storageRepository->getObject(Settings::PLUGIN_NAME, self::AUTH_FILENAME);
             return $storageObject->body;
