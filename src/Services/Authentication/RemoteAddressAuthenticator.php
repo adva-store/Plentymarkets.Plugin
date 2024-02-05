@@ -103,6 +103,8 @@ class RemoteAddressAuthenticator
      */
 	public function resetAuth(): string
 	{
+        $this->getLogger('IP Whitelist info')->info('Reset of Whitelist called');
+
         if($this->storageRepository->doesObjectExist(Settings::PLUGIN_NAME,self::AUTH_FILENAME)) {
             $this->storageRepository->deleteObject(Settings::PLUGIN_NAME, self::AUTH_FILENAME);
             return 'DELETED';
