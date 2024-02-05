@@ -103,7 +103,7 @@ class RemoteAddressAuthenticator
      */
 	public function resetAuth(): string
 	{
-        $this->getLogger('IP Whitelist info')->info('Reset of Whitelist called');
+        //$this->getLogger('IP Whitelist info')->info('Reset of Whitelist called');
 
         if($this->storageRepository->doesObjectExist(Settings::PLUGIN_NAME,self::AUTH_FILENAME)) {
             $this->storageRepository->deleteObject(Settings::PLUGIN_NAME, self::AUTH_FILENAME);
@@ -119,13 +119,13 @@ class RemoteAddressAuthenticator
      */
 	public function getWhitelist()
 	{
-        $this->getLogger('IP Whitelist info')->info('Get Whitelist called');
+        //$this->getLogger('IP Whitelist info')->info('Get Whitelist called');
 
 		if($this->storageRepository->doesObjectExist(Settings::PLUGIN_NAME,self::AUTH_FILENAME)) {
             $storageObject = $this->storageRepository->getObject(Settings::PLUGIN_NAME, self::AUTH_FILENAME);
             return $storageObject->body;
 		}
 
-		throw new Exception('No saved whitelist!');
+		throw new Exception('Whitelist not found!');
 	}
 }
