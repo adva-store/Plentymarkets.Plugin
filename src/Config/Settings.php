@@ -18,7 +18,7 @@ class Settings
     CONST URL_PARAMETER = 'process';
 
     const URL_PROD    =  'https://api.advastore.com/';
-    const URL_DEV     = 'https://sandbox.advaapi.com/';
+    const URL_DEV     = 'https://quick-talented-gannet.ngrok-free.app/';
 
     const PRODUCT_EXPORT_FILENAME = 'products.csv';
 
