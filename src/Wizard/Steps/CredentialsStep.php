@@ -11,26 +11,6 @@ class CredentialsStep
                 [
                     "title" => "Wizard.credentials.title",
                     "form" => [
-                        "pluginSetupPhase" => [
-                            "type" => "select",
-                            "options" => [
-                                "name" => "Wizard.credentials.pluginSetupPhase",
-                                "listBoxValues" => [
-                                    [
-                                        "caption" => "Wizard.credentials.pluginSetupPhase.Phase1",
-                                        "value" => 1
-                                    ],
-                                    [
-                                        "caption" => "Wizard.credentials.pluginSetupPhase.Phase2",
-                                        "value" => 2
-                                    ],
-                                    [
-                                        "caption" => "Wizard.credentials.pluginSetupPhase.Phase3",
-                                        "value" => 3
-                                    ]
-                                ]
-                            ]
-                        ],
                         "merchantId" => [
                             "type" => "text",
                             "minValue" => 2,
