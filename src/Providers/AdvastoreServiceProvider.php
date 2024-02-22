@@ -59,7 +59,7 @@ class AdvastoreServiceProvider extends ServiceProvider
         /** Register the "SendOrder" event procedure with the "ProcessAdvaOrder::handle" method in the EventProceduresService. **/
         $eventProceduresService->registerProcedure(
             Settings::PLUGIN_NAME . 'SendOrder',
-            ProcedureEntry::PROCEDURE_GROUP_ORDER,
+            ProcedureEntry::EVENT_TYPE_ORDER,
             [
                 'de' => Settings::PLUGIN_NAME . ' - Sende Auftrag',
                 'en' => Settings::PLUGIN_NAME . ' - Send order',
