@@ -70,7 +70,7 @@ class AdvastoreServiceProvider extends ServiceProvider
         /** Register the "SendInvoice" event procedure with the "SendInvoice::handle" method in the EventProceduresService.**/
         $eventProceduresService->registerProcedure(
             Settings::PLUGIN_NAME . 'SendInvoice',
-            ProcedureEntry::PROCEDURE_GROUP_ORDER,
+            ProcedureEntry::EVENT_TYPE_ORDER,
             [
                 'de' => Settings::PLUGIN_NAME . ' - Sende Rechnung',
                 'en' => Settings::PLUGIN_NAME . ' - Send invoice',
@@ -81,7 +81,7 @@ class AdvastoreServiceProvider extends ServiceProvider
         /** Register the "SendDeliveryNote" event procedure with the "SendDeliveryNote::handle" method in the EventProceduresService. **/
         $eventProceduresService->registerProcedure(
             Settings::PLUGIN_NAME . 'SendDeliveryNote',
-            ProcedureEntry::PROCEDURE_GROUP_ORDER,
+            ProcedureEntry::EVENT_TYPE_ORDER,
             [
                 'de' => Settings::PLUGIN_NAME . ' - Sende Lieferschein',
                 'en' => Settings::PLUGIN_NAME . ' - Send delivery note',
@@ -92,7 +92,7 @@ class AdvastoreServiceProvider extends ServiceProvider
         /** Register the "SendReturnLabel" event procedure with the "SendReturnNote::handle" method in the EventProceduresService. **/
         $eventProceduresService->registerProcedure(
             Settings::PLUGIN_NAME . 'SendReturnLabel',
-            ProcedureEntry::PROCEDURE_GROUP_ORDER,
+            ProcedureEntry::EVENT_TYPE_ORDER,
             [
                 'de' => Settings::PLUGIN_NAME . ' - Sende Rücksendelabel',
                 'en' => Settings::PLUGIN_NAME . ' - Send return label',
@@ -103,7 +103,7 @@ class AdvastoreServiceProvider extends ServiceProvider
         /** Register the "SendReturnNote" event procedure with the "SendReturnNote::handle" method in the EventProceduresService. **/
         $eventProceduresService->registerProcedure(
             Settings::PLUGIN_NAME . 'SendReturnNote',
-            ProcedureEntry::PROCEDURE_GROUP_ORDER,
+            ProcedureEntry::EVENT_TYPE_ORDER,
             [
                 'de' => Settings::PLUGIN_NAME . ' - Sende Rücksendeschein',
                 'en' => Settings::PLUGIN_NAME . ' - Send return note',
