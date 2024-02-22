@@ -77,6 +77,12 @@ class OrderBuilder
         $postNumber = array_filter($plentyAddress->toArray()['options'],fn($x)=>$x['typeId']===AddressOption::TYPE_POST_NUMBER);
         $postNumber = ($postNumber) ? array_values($postNumber)[0]['value'] :false;
 
+        $mergedAdditionalAddressFields = $plentyAddress->additional;
+
+        if ($plentyAddress->address4) {
+            $mergedAdditionalAddressFields = $mergedAdditionalAddressFields . PHP_EOL . $plentyAddress->address4;
+        }
+
         $customerAddress
             ->setCompanyName($plentyAddress->companyName)
             ->setFirstName($plentyAddress->firstName)
@@ -86,7 +92,7 @@ class OrderBuilder
             ->setCity($plentyAddress->town)
             ->setPostalCode($plentyAddress->postalCode)
             ->setCountryIsoCode(OrderHelper::getISOCode($plentyAddress->countryId))
-            ->setAdditionToAddress($postNumber??$plentyAddress->additional)
+            ->setAdditionToAddress($postNumber??$mergedAdditionalAddressFields)
             ->setPhoneNumber($plentyAddress->phone);
 
         return $customerAddress;
