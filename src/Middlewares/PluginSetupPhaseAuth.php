@@ -41,7 +41,7 @@ class PluginSetupPhaseAuth extends Middleware
 
         if(!$process || !$this->pluginSetupPhaseAuthenticator->isCurrentProcessAllowed($process)) {
             header("HTTP/1.1 401 Unauthorized");
-            die('401 Unauthorized - Webhook $process not allowed in this plugin setup phase!');
+            die("401 Unauthorized - Webhook $process not allowed in this plugin setup phase!");
         }
 
         return $request;

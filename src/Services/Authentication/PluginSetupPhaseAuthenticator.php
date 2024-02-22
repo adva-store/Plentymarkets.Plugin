@@ -14,7 +14,7 @@ class PluginSetupPhaseAuthenticator
         2 => [
             Settings::WEBHOOK_UPDATEPRODUCTS_GENERATE,
             Settings::WEBHOOK_UPDATEPRODUCTS_EXPORT,
-            Settings::WEBHOOK_INVOKE_GET_STOCKS
+            Settings::WEBHOOK_INVOKE_GET_STOCKS,
         ]
     ];
 

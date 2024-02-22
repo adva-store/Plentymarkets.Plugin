@@ -8,6 +8,7 @@ use Advastore\Events\Procedures\SendDeliveryNote;
 use Advastore\Events\Procedures\SendInvoice;
 use Advastore\Events\Procedures\SendReturnLabel;
 use Advastore\Events\Procedures\SendReturnNote;
+use Advastore\Services\Authentication\PluginSetupPhaseAuthenticator;
 use Advastore\Services\Order\OrderConfirmation;
 use Advastore\Wizard\AdvastoreWizard;
 use Plenty\Modules\Cron\Services\CronContainer;
@@ -22,6 +23,7 @@ use Plenty\Plugin\ServiceProvider;
  */
 class AdvastoreServiceProvider extends ServiceProvider
 {
+
     /**
     * Register the route service provider
     */
