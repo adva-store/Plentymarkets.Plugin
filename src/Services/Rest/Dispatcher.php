@@ -38,7 +38,7 @@ class Dispatcher
 
         if($this->isTesting) {
             $this->baseURL  = Settings::URL_DEV;
-            //$this->sandboxToken = $this->wizardData->getSandboxToken();
+            $this->sandboxToken = $this->wizardData->getSandboxToken();
         }
 	}
 
@@ -54,7 +54,7 @@ class Dispatcher
 	{
 		$header[] = "Content-Type: $request->contentType";
         $header[] = "ApiKey: $this->apiToken";
-        //if($this->isTesting) $header[] = "Sandboxapikey: $this->sandboxToken";
+        if($this->isTesting) $header[] = "Sandboxapikey: $this->sandboxToken";
 
         $curl = curl_init();
 
@@ -65,7 +65,7 @@ class Dispatcher
 			CURLOPT_HTTPHEADER => $header
 		]);
 
-        //curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, !$this->isTesting);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, !$this->isTesting);
 
 		if($request->postfields)
 			curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($request->postfields));
