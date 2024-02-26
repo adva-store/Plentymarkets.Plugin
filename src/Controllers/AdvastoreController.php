@@ -3,10 +3,12 @@
 namespace Advastore\Controllers;
 
 use Advastore\Config\Settings;
+use Advastore\Helper\OrderHelper;
 use Advastore\Migrations\CreateOrderProperties;
 use Advastore\Migrations\CreateReferrer;
 use Advastore\Services\Products\ProductExport;
-use Plenty\Modules\Document\Contracts\DocumentRepositoryContract;
+use Plenty\Modules\Account\Address\Models\AddressRelationType;
+use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Response;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -34,10 +36,17 @@ class AdvastoreController extends Controller
      */
     public function debug(): string
     {
-        $repo = pluginApp(DocumentRepositoryContract::class);
-        $repo->setFilters(['orderId' => 1650]);
-        $result = $repo->find();
-        return json_encode($result->getResult());
+        $repo = pluginApp(OrderRepositoryContract::class);
+        $order = $repo->findById(139, ['addresses']);
+        $plentyAddress = OrderHelper::getAddress($order,AddressRelationType::DELIVERY_ADDRESS);
+
+        $mergedAdditionalAddressFields = $plentyAddress->additional;
+
+        if ($plentyAddress->address4) {
+            $mergedAdditionalAddressFields = $mergedAdditionalAddressFields . PHP_EOL . $plentyAddress->address4;
+        }
+
+        return json_encode($mergedAdditionalAddressFields);
     }
 
     /**

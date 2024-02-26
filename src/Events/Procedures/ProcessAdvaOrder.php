@@ -37,7 +37,10 @@ class ProcessAdvaOrder
     public function handle(EventProceduresTriggered $eventTriggered): void
     {
         try {
-            $advastoreOrder = $this->orderExport->export($eventTriggered->getOrder());
+            $order = $eventTriggered->getOrder();
+            if (!$order->hasDeliveryOrders) {
+                $advastoreOrder = $this->orderExport->export($order);
+            }
         }
         catch (Exception $e) {
             $this->getLogger('process:order')->error('Exception',$e);
