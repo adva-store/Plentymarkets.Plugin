@@ -71,16 +71,6 @@ class WizardData extends WizardDataHandler
     }
 
     /**
-     * Get the merchant ID.
-     *
-     * @return string Returns the merchant ID.
-     */
-    public function getMerchantId(): string
-    {
-        return $this->settings['merchantId'] ?? '';
-    }
-
-    /**
      * Get the warehouse ID.
      *
      * @return int Returns the warehouse ID.
