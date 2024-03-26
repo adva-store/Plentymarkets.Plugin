@@ -5,6 +5,7 @@ namespace Advastore\Services\Order;
 use Advastore\Config\Settings;
 use Advastore\Config\WizardData;
 use Advastore\Helper\OrderHelper;
+use Advastore\Services\Authentication\PluginSetupPhaseAuthenticator;
 use Advastore\Services\Rest\WebserviceMethods;
 use Exception;
 use Generator;
@@ -27,11 +28,13 @@ class OrderConfirmation
      * @param WizardData $wizardData
      * @param OrderRepositoryContract $orderRepository
      * @param WebserviceMethods $webserviceMethods
+     * @param PluginSetupPhaseAuthenticator $pluginSetupPhaseAuthenticator
      */
     public function __construct(
         private WizardData $wizardData,
         private OrderRepositoryContract $orderRepository,
-        private WebserviceMethods $webserviceMethods
+        private WebserviceMethods $webserviceMethods,
+        private PluginSetupPhaseAuthenticator $pluginSetupPhaseAuthenticator
     ){}
 
     /**
@@ -42,6 +45,11 @@ class OrderConfirmation
      */
     public function handle(): string
     {
+        if(!$this->pluginSetupPhaseAuthenticator->isCurrentProcessAllowed()) {
+            $this->getLogger('OrderConfirmation')->error(Settings::PLUGIN_NAME.'::Logger.error | Event handle OrderConfirmation not allowed in this plugin setup phase!');
+            return "ERROR";
+        }
+
         foreach ($this->getPlentyOrders() as $plentyOrders) {
             /** @var PlentyOrder $plentyOrder */
             foreach ($plentyOrders as $plentyOrder)

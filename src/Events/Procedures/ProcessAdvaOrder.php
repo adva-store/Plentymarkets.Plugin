@@ -3,10 +3,12 @@
 namespace Advastore\Events\Procedures;
 
 use Advastore\Config\Settings;
+use Advastore\Services\Authentication\PluginSetupPhaseAuthenticator;
 use Advastore\Services\Order\OrderExport;
 use Exception;
 use Plenty\Modules\EventProcedures\Events\EventProceduresTriggered;
 use Plenty\Plugin\Log\Loggable;
+use Plenty\Modules\Authorization\Services\AuthHelper;
 
 /**
  * Class ProcessAdvaOrder
@@ -21,9 +23,13 @@ class ProcessAdvaOrder
      * ProcessAdvaOrder constructor.
      *
      * @param OrderExport $orderExport
+     * @param AuthHelper $authHelper
+     * @param PluginSetupPhaseAuthenticator $pluginSetupPhaseAuthenticator
      */
     public function __construct(
-        private OrderExport $orderExport
+        private OrderExport $orderExport,
+        private AuthHelper $authHelper,
+        private PluginSetupPhaseAuthenticator $pluginSetupPhaseAuthenticator
     ){}
 
     /**
@@ -36,8 +42,15 @@ class ProcessAdvaOrder
      */
     public function handle(EventProceduresTriggered $eventTriggered): void
     {
+        if(!$this->pluginSetupPhaseAuthenticator->isCurrentProcessAllowed()) {
+            $this->getLogger('ProcessAdvaOrder')->error(Settings::PLUGIN_NAME.'::Logger.error | Event handle ProcessAdvaOrder not allowed in this plugin setup phase!');
+            return;
+        }
+
         try {
-            $advastoreOrder = $this->orderExport->export($eventTriggered->getOrder());
+            $advastoreOrder = $this->authHelper->processUnguarded(function () use ($eventTriggered){
+                return $this->orderExport->export($eventTriggered->getOrder());
+            });
         }
         catch (Exception $e) {
             $this->getLogger('process:order')->error('Exception',$e);

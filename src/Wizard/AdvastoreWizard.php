@@ -7,6 +7,7 @@ use Advastore\Config\WizardDataHandler;
 use Advastore\Wizard\SettingsHandler\SettingsHandler;
 use Advastore\Wizard\Steps\CredentialsStep;
 use Advastore\Wizard\Steps\OrderSteps;
+use Advastore\Wizard\Steps\PluginSetupPhaseStep;
 use Advastore\Wizard\Steps\WarehouseStep;
 use Plenty\Modules\Wizard\Services\WizardProvider;
 use Plenty\Plugin\Application;
@@ -22,11 +23,13 @@ class AdvastoreWizard extends WizardProvider
     /**
      * AdvastoreWizard constructor.
      *
+     * @param PluginSetupPhaseStep $pluginSetupPhaseStep
      * @param CredentialsStep $credentialsStep
      * @param WarehouseStep $warehouseStep
      * @param OrderSteps $orderSteps
      */
     public function __construct(
+        private PluginSetupPhaseStep $pluginSetupPhaseStep,
         private CredentialsStep $credentialsStep,
         private WarehouseStep $warehouseStep,
         private OrderSteps $orderSteps
@@ -48,6 +51,7 @@ class AdvastoreWizard extends WizardProvider
           'settingsHandlerClass' => WizardDataHandler::class,
           'translationNamespace' => Settings::PLUGIN_NAME,
           'steps' => [
+              $this->pluginSetupPhaseStep->generateStep(),
               $this->credentialsStep->generateStep(),
               $this->warehouseStep->generateStep(),
               $this->orderSteps->generateStep()

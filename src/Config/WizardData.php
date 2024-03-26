@@ -125,5 +125,15 @@ class WizardData extends WizardDataHandler
     {
         return $this->settings['noticeUserId'] ?? 2;
     }
+
+    /**
+     * Get the value of plugin setup phase
+     *
+     * @return int Returns the value of plugin setup phase
+     */
+    public function getPluginSetupPhase(): int
+    {
+        return $this->settings['pluginSetupPhase'] ?? 1;
+    }
 }
 
