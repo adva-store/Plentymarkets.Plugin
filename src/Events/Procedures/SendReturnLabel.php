@@ -3,6 +3,7 @@
 namespace Advastore\Events\Procedures;
 
 use Advastore\Config\Settings;
+use Advastore\Services\Authentication\PluginSetupPhaseAuthenticator;
 use Advastore\Services\Order\OrderDocumentsService;
 use Exception;
 use Plenty\Modules\EventProcedures\Events\EventProceduresTriggered;
@@ -18,6 +19,15 @@ class SendReturnLabel
     use Loggable;
 
     /**
+     * SendReturnLabel constructor.
+     *
+     * @param PluginSetupPhaseAuthenticator $pluginSetupPhaseAuthenticator
+     */
+    public function __construct(
+        private PluginSetupPhaseAuthenticator $pluginSetupPhaseAuthenticator
+    ){}
+
+    /**
      * Handle the event procedure to send the latest shipping label.
      *
      * @param EventProceduresTriggered $eventTriggered The event triggered data.
@@ -27,6 +37,11 @@ class SendReturnLabel
      */
     public function handle(EventProceduresTriggered $eventTriggered): void
     {
+        if(!$this->pluginSetupPhaseAuthenticator->isCurrentProcessAllowed()) {
+            $this->getLogger('event:send-return-label')->error(Settings::PLUGIN_NAME.'::Logger.error | Event handle event:send-return-label not allowed in this plugin setup phase!');
+            return;
+        }
+
         try {
             $order  = $eventTriggered->getOrder();
             $result = pluginApp(OrderDocumentsService::class)->sendReturnLabel($order);

@@ -6,6 +6,7 @@ use Advastore\Config\Settings;
 use Advastore\Config\WizardData;
 use Advastore\Controllers\AdvastoreController;
 use Advastore\Controllers\AdvastoreDispatcher;
+use Advastore\Middlewares\PluginSetupPhaseAuth;
 use Advastore\Middlewares\RemoteAddressAuth;
 use Advastore\Middlewares\TokenAuth;
 use Advastore\Services\Authentication\RemoteAddressAuthenticator;
@@ -24,7 +25,7 @@ class AdvastoreRouteServiceProvider extends RouteServiceProvider
     {
         $prefix = Settings::URL_PREFIX;
 
-        $apiRouter->version(['v1'], ['middleware' => [TokenAuth::class, RemoteAddressAuth::class]],function ($router) use ($prefix)
+        $apiRouter->version(['v1'], ['middleware' => [TokenAuth::class, RemoteAddressAuth::class, PluginSetupPhaseAuth::class]],function ($router) use ($prefix)
         {
             /** WebHooks
              *
