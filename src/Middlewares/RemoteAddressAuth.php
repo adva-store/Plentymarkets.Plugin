@@ -38,10 +38,10 @@ class RemoteAddressAuth extends Middleware
      */
     public function before(Request $request): Request
     {
-        if(!$this->remoteAddressAuthenticator->checkAuth($_SERVER['REMOTE_ADDR'])) {
+        /*if(!$this->remoteAddressAuthenticator->checkAuth($_SERVER['REMOTE_ADDR'])) {
             header("HTTP/1.1 401 Unauthorized");
             die('401 Unauthorized - IP is not whitelisted!');
-        }
+        }*/
 
         return $request;
     }
