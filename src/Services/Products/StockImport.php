@@ -4,6 +4,8 @@ namespace Advastore\Services\Products;
 
 use Advastore\Config\WizardData;
 use Advastore\Services\Rest\WebserviceMethods;
+use DateInterval;
+use DateTime;
 use Exception;
 use Plenty\Modules\Item\VariationStock\Contracts\VariationStockRepositoryContract;
 use Plenty\Plugin\Log\Loggable;
@@ -58,12 +60,15 @@ class StockImport
     public function correctStock(mixed $variationId, int $stockQuantity): void
     {
         try {
+            $date = new DateTime();
+            $date->add(new DateInterval('P1M'));
             $this->variationStockRepository->correctStock($variationId,[
                 'quantity' => (float) $stockQuantity,
                 'warehouseId' => $this->wizardData->getWarehouseId(),
                 'storageLocationId' => $this->wizardData->getStorageLocationId(),
                 'reasonId' => 301,
-                'batch' => 'LOT#1234'
+                'batch' => 'LOT#'.$variationId,
+                'bestBeforeDate' => $date->format(DateTime::W3C)
             ]);
         }
         catch (Exception $e) {
