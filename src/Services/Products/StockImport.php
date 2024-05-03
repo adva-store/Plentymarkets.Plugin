@@ -62,7 +62,9 @@ class StockImport
                 'quantity' => (float) $stockQuantity,
                 'warehouseId' => $this->wizardData->getWarehouseId(),
                 'storageLocationId' => $this->wizardData->getStorageLocationId(),
-                'reasonId' => 301
+                'reasonId' => 301,
+                'batch' => 'LOT#'. mt_rand(1000, 9000),
+                'bestBeforeDate' => date(DATE_W3C)
             ]);
         }
         catch (Exception $e) {
