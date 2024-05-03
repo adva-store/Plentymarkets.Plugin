@@ -60,15 +60,13 @@ class StockImport
     public function correctStock(mixed $variationId, int $stockQuantity): void
     {
         try {
-            $date = new DateTime();
-            $date->add(new DateInterval('P1M'));
             $this->variationStockRepository->correctStock($variationId,[
                 'quantity' => (float) $stockQuantity,
                 'warehouseId' => $this->wizardData->getWarehouseId(),
                 'storageLocationId' => $this->wizardData->getStorageLocationId(),
                 'reasonId' => 301,
                 'batch' => 'LOT#'.$variationId,
-                'bestBeforeDate' => $date->format(DateTime::W3C)
+                'bestBeforeDate' => '2025-06-01'
             ]);
         }
         catch (Exception $e) {
