@@ -66,7 +66,7 @@ class StockImport
                 'storageLocationId' => $this->wizardData->getStorageLocationId(),
                 'reasonId' => 301,
                 'batch' => 'LOT#'.$variationId,
-                'bestBeforeDate' => '2025-06-01'
+                'bestBeforeDate' => '2028-06-02'
             ]);
         }
         catch (Exception $e) {
