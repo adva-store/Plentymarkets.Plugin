@@ -11,13 +11,6 @@ class CredentialsStep
                 [
                     "title" => "Wizard.credentials.title",
                     "form" => [
-                        "merchantId" => [
-                            "type" => "text",
-                            "minValue" => 2,
-                            "options" => [
-                                "name" => "Wizard.credentials.merchantId",
-                            ]
-                        ],
                         "isTesting" => [
                             "type" => "toggle",
                             "options" => [

@@ -71,16 +71,6 @@ class WizardData extends WizardDataHandler
     }
 
     /**
-     * Get the merchant ID.
-     *
-     * @return string Returns the merchant ID.
-     */
-    public function getMerchantId(): string
-    {
-        return $this->settings['merchantId'] ?? '';
-    }
-
-    /**
      * Get the warehouse ID.
      *
      * @return int Returns the warehouse ID.
@@ -134,6 +124,16 @@ class WizardData extends WizardDataHandler
     public function getUserIdForNotice(): int
     {
         return $this->settings['noticeUserId'] ?? 2;
+    }
+
+    /**
+     * Get the value of plugin setup phase
+     *
+     * @return int Returns the value of plugin setup phase
+     */
+    public function getPluginSetupPhase(): int
+    {
+        return $this->settings['pluginSetupPhase'] ?? 1;
     }
 }
 
