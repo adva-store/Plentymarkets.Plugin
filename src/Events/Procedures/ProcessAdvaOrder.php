@@ -46,9 +46,11 @@ class ProcessAdvaOrder
             $this->getLogger('ProcessAdvaOrder')->error(Settings::PLUGIN_NAME.'::Logger.error | Event handle ProcessAdvaOrder not allowed in this plugin setup phase!');
             return;
         }
-
+        
+        $this->getLogger('ProcessAdvaOrder')->error(Settings::PLUGIN_NAME.'::Logger.error | Start process order...');
         try {
             $advastoreOrder = $this->authHelper->processUnguarded(function () use ($eventTriggered){
+                $this->getLogger('ProcessAdvaOrder')->error(Settings::PLUGIN_NAME.'::Logger.error | Export order...');
                 return $this->orderExport->export($eventTriggered->getOrder());
             });
         }
