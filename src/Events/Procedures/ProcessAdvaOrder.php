@@ -44,7 +44,7 @@ class ProcessAdvaOrder
     {
         $this->getLogger('ProcessAdvaOrder')->error(Settings::PLUGIN_NAME.'::Logger.error | Start process order...');
         if(!$this->pluginSetupPhaseAuthenticator->isCurrentProcessAllowed()) {
-            $this->getLogger('ProcessAdvaOrder')->error(Settings::PLUGIN_NAME.'::Logger.error | Event handle ProcessAdvaOrder not allowed in this plugin setup phase!');
+            $this->getLogger('ProcessAdvaOrder')->error(Settings::PLUGIN_NAME.'::Logger.error | Event handle ProcessAdvaOrder not allowed in this plugin setup phase xxxx!');
             return;
         }
         
