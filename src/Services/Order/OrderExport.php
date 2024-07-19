@@ -45,17 +45,16 @@ class OrderExport
             $advastoreOrder = $this->orderBuilder->buildOrder($plentyOrder);
             $response = $this->webservice->sendOrder($advastoreOrder);
 
-            $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME.'::Logger.debug', "Log reponse here");
             $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME.'::Logger.debug', ['response' => $response]);
 
-            if ($response->orderId) {
+            if (!empty($response->orderId)) {
                 OrderHelper::setExternalOrderId($plentyOrder->id, $response->orderId);
                 OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getStatusId());
                 OrderHelper::setOrderComment($plentyOrder->id, "Auftrag exportiert an Advastore ($response->orderId)");
             } else {
                 OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getErrorStatusId());
                 OrderHelper::setOrderComment($plentyOrder->id,
-                    "Fehler bei Auftragsexport an Advastore xxx (".$response['type'].")<br>");
+                    "Fehler bei Auftragsexport an Advastore xxx ({$response->type})<br>{$response->title}<br>{$response->detail}");
             }
         } catch (Exception $e) {
             OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getErrorStatusId());
