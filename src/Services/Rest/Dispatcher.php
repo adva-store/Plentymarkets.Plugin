@@ -90,7 +90,7 @@ class Dispatcher
 
 		curl_close($curl);
 
-        if($httpcode >= Response::HTTP_BAD_REQUEST) {
+        if($httpcode >= Response::HTTP_BAD_REQUEST && $httpcode != Response::HTTP_NOT_ACCEPTABLE) {
             throw new Exception("Dispatcher::sendRequest".$httpcode);
         }
 
