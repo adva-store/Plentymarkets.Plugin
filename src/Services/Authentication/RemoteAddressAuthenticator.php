@@ -56,6 +56,10 @@ class RemoteAddressAuthenticator
         return false;
     }
 
+    public function test(): string {
+        return "This is Test 1";
+    }
+
     /**
      * Checks if the auth token exists.
      *
