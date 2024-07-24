@@ -49,7 +49,7 @@ class AdvastoreRouteServiceProvider extends RouteServiceProvider
 
             $router->delete($prefix.'/debug/settings/delete',WizardData::class.'@resetWizardData');
             $router->get($prefix.'/debug/authtoken/delete',TokenAuthenticator::class.'@resetAuthToken');
-            $router->delete($prefix.'/debug/whitelist/delete',RemoteAddressAuthenticator::class.'@resetAuth');
+            $router->get($prefix.'/debug/whitelist/delete',RemoteAddressAuthenticator::class.'@resetAuth');
 
             $router->get($prefix.'/debug',AdvastoreController::class.'@debug');
         });
