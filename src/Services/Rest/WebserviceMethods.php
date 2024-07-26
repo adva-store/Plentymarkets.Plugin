@@ -32,6 +32,8 @@ class WebserviceMethods extends Dispatcher
         $request->requestURL = Settings::ENDPOINT_ORDER;
         $request->postfields = $advastoreOrder;
 
+        $this->getLogger('OrderExportRequest')->debug(Settings::PLUGIN_NAME.'::Logger.debug',$request);
+
         return $this->post($request);
     }
 
