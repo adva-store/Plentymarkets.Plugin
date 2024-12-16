@@ -109,7 +109,8 @@ class OrderBuilder
                     ->setSellerSku($orderItem->itemVariationId)
                     ->setQuantity($orderItem->quantity)
                     ->setGrossSalesPrice($orderItem->amounts[0]->priceGross)
-                    ->setNetSalesPrice($orderItem->amounts[0]->priceNet);
+                    ->setNetSalesPrice($orderItem->amounts[0]->priceNet)
+                    ->setShippingProviderService('AgeVerification', $orderItem->ageRestriction);
 
                 $orderPositions[] = $orderPosition;
             }
