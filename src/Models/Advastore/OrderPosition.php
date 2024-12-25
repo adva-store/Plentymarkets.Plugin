@@ -57,8 +57,11 @@ class OrderPosition
      * @param string $value The value for the service (e.g., service description)
      * @return self
      */
-    public function setShippingProviderService(string $key, string $value): self
+    public function setShippingProviderService(string $key, ?string $value): self
     {
+        if ($value === null) {
+            return $this; // Do nothing if the value is null
+        }
         $this->shippingProviderServices[$key] = $value;
         return $this;
     }
