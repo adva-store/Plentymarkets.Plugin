@@ -125,7 +125,6 @@ class OrderBuilder
                     ->setShippingProviderService('AgeVerification', $ageRestriction);
 
                 $orderPositions[] = $orderPosition;
-                $this->getLogger('OrderBuilder')->error('ORDER POSITION TEST:', $orderPosition);
             }
         }
 
