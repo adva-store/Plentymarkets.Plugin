@@ -4,11 +4,11 @@ namespace Advastore\Models\Advastore;
 
 class OrderPosition
 {
-    public ?int    $quantity;
+    public ?int $quantity;
     public ?string $sellerSku;
-    public ?float  $netSalesPrice;
-    public ?float  $grossSalesPrice;
-
+    public ?float $netSalesPrice;
+    public ?float $grossSalesPrice;
+    public ?array $shippingProviderServices = [];
     /**
      * @param int|null $quantity
      * @return OrderPosition
@@ -50,13 +50,30 @@ class OrderPosition
     }
 
     /**
+     * Method to set a service in the shippingProviderServices dictionary
+     * Currently used only for age verification
+     *
+     * @param string $key   The key for the service (e.g., provider name)
+     * @param string $value The value for the service (e.g., service description)
+     * @return self
+     */
+    public function setShippingProviderService(string $key, ?string $value): self
+    {
+        if ($value === null) {
+            return $this; // Do nothing if the value is null
+        }
+        $this->shippingProviderServices[$key] = $value;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array
     {
         $addressArray = [];
 
-        foreach ($this as $key => $value){
+        foreach ($this as $key => $value) {
             $addressArray[$key] = $value;
         }
 

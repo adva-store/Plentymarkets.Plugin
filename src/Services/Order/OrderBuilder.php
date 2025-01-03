@@ -2,6 +2,7 @@
 
 namespace Advastore\Services\Order;
 
+use Exception;
 use Advastore\Helper\OrderHelper;
 use Advastore\Models\Advastore\CustomerAddress;
 use Advastore\Models\Advastore\Order as AdvaStoreOrder;
@@ -11,6 +12,8 @@ use Plenty\Modules\Account\Address\Models\AddressRelationType;
 use Plenty\Modules\Order\Models\Order as PlentyOrder;
 use Plenty\Modules\Order\Models\OrderItemType;
 use Plenty\Plugin\Log\Loggable;
+use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
+use Plenty\Modules\Item\Item\Contracts\ItemRepositoryContract;
 
 /**
  * Class OrderBuilder
@@ -25,9 +28,9 @@ class OrderBuilder
      * The allowed order item types for building AdvaStore orders.
      */
     const allowedOrderItems = [
-      OrderItemType::TYPE_VARIATION,
-      OrderItemType::TYPE_BUNDLE_COMPONENT,
-      OrderItemType::TYPE_SET_COMPONENT
+        OrderItemType::TYPE_VARIATION,
+        OrderItemType::TYPE_BUNDLE_COMPONENT,
+        OrderItemType::TYPE_SET_COMPONENT
     ];
 
     /**
@@ -37,9 +40,16 @@ class OrderBuilder
 
     /**
      * OrderBuilder constructor.
+     * @param VariationRepositoryContract $variationSearchRepository
+     * @param ItemRepositoryContract $itemRepository
      */
-    public function __construct() {
+    public function __construct(
+        private VariationRepositoryContract $variationSearchRepository,
+        private ItemRepositoryContract $itemRepository
+    ) {
         $this->advastoreOrder = pluginApp(AdvaStoreOrder::class);
+        $this->variationSearchRepository = $variationSearchRepository;
+        $this->itemRepository = $itemRepository;
     }
 
     /**
@@ -54,10 +64,10 @@ class OrderBuilder
         $this->advastoreOrder->allowPartiallyFulfillment = false;
         $this->advastoreOrder->orderTime = date(DATE_W3C);
         $this->advastoreOrder->externalCustomerNo = OrderHelper::getCustomerId($plentyOrder);
-        $this->advastoreOrder->email = OrderHelper::getAddress($plentyOrder,AddressRelationType::DELIVERY_ADDRESS)->email;
+        $this->advastoreOrder->email = OrderHelper::getAddress($plentyOrder, AddressRelationType::DELIVERY_ADDRESS)->email;
 
         $this->advastoreOrder->shippingAddress = $this->buildAddress($plentyOrder);
-        $this->advastoreOrder->orderPositions  = $this->buildOrderPositions($plentyOrder);
+        $this->advastoreOrder->orderPositions = $this->buildOrderPositions($plentyOrder);
 
         return $this->advastoreOrder;
     }
@@ -70,12 +80,12 @@ class OrderBuilder
      */
     protected function buildAddress(PlentyOrder $order): CustomerAddress
     {
-        $plentyAddress   = OrderHelper::getAddress($order,AddressRelationType::DELIVERY_ADDRESS);
+        $plentyAddress = OrderHelper::getAddress($order, AddressRelationType::DELIVERY_ADDRESS);
         $customerAddress = pluginApp(CustomerAddress::class);
 
         // Find in options
-        $postNumber = array_filter($plentyAddress->toArray()['options'],fn($x)=>$x['typeId']===AddressOption::TYPE_POST_NUMBER);
-        $postNumber = ($postNumber) ? array_values($postNumber)[0]['value'] :false;
+        $postNumber = array_filter($plentyAddress->toArray()['options'], fn($x) => $x['typeId'] === AddressOption::TYPE_POST_NUMBER);
+        $postNumber = ($postNumber) ? array_values($postNumber)[0]['value'] : false;
 
         // Additional fields
         $additionalFields = [
@@ -111,23 +121,42 @@ class OrderBuilder
      */
     protected function buildOrderPositions(PlentyOrder $plentyOrder): array
     {
-        $orderPositions=[];
-        foreach ($plentyOrder->orderItems as $orderItem)
-        {
-            if(in_array($orderItem->typeId,self::allowedOrderItems))
-            {
+        $orderPositions = [];
+        foreach ($plentyOrder->orderItems as $orderItem) {
+            if (in_array($orderItem->typeId, self::allowedOrderItems)) {
                 $orderPosition = pluginApp(OrderPosition::class);
+                $ageRestriction = $this->getAgeRestriction($orderItem->itemVariationId);
 
                 $orderPosition
                     ->setSellerSku($orderItem->itemVariationId)
                     ->setQuantity($orderItem->quantity)
                     ->setGrossSalesPrice($orderItem->amounts[0]->priceGross)
-                    ->setNetSalesPrice($orderItem->amounts[0]->priceNet);
+                    ->setNetSalesPrice($orderItem->amounts[0]->priceNet)
+                    ->setShippingProviderService('AgeVerification', $ageRestriction);
 
                 $orderPositions[] = $orderPosition;
             }
         }
 
         return $orderPositions;
+    }
+
+    protected function getAgeRestriction(int $variationId): ?int
+    {
+        try {
+            $variationData = $this->variationSearchRepository->show($variationId, ['variationAttributeValues', 'variationBase'], 'de');
+            $item = $this->itemRepository->show($variationData['itemId']);
+            $value = $item['ageRestriction'];
+
+            // Return null if the value is not set or is 0
+            if (empty($value)) {
+                return null;
+            }
+            return $value;
+        } catch (Exception $e) {
+            // Log any exceptions for debugging
+            $this->getLogger('OrderBuilder')->error('Exception in getAgeRestriction:', $e);
+            return null; // Return null in case of an error
+        }
     }
 }
