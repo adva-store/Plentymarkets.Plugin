@@ -41,7 +41,7 @@ class ProductExport
         private VariationSearchRepositoryContract $variationSearchRepository,
         private ItemRepositoryContract $itemRepository,
         private ManufacturerRepositoryContract $manufacturerRepository
-    ){}
+    ) {}
 
     /**
      * Prepare product data for export and save to CSV file.
@@ -54,7 +54,7 @@ class ProductExport
 
         $CSVString = $this->CSVGenerator->createFromArrays($variationsData);
 
-        $this->dataStorage->saveData(Settings::PRODUCT_EXPORT_FILENAME,$CSVString);
+        $this->dataStorage->saveData(Settings::PRODUCT_EXPORT_FILENAME, $CSVString);
     }
 
     /**
@@ -87,26 +87,25 @@ class ProductExport
                 'page' => $page,
                 'itemsPerPage' => 10,
                 'with' => [
-                    'variationBarcodes'=>true,
-                    'images'=>true,
-                    'variationAttributeValues'=>true,
-                    'variationSalesPrices'=>true
+                    'variationBarcodes' => true,
+                    'images' => true,
+                    'variationAttributeValues' => true,
+                    'variationSalesPrices' => true
                 ]
             ]);
 
             $result = $this->variationSearchRepository->search();
 
             /** @var Variation $variation */
-            foreach ($result->getResult() as $variation)
-            {
+            foreach ($result->getResult() as $variation) {
                 $item = $this->getItemData($variation['itemId'])->toArray();
 
                 $attributeName = '';
-                if(!empty($variation['variationAttributeValues'])) {
+                if (!empty($variation['variationAttributeValues'])) {
                     foreach ($variation['variationAttributeValues'] as $key => $attributeEntry) {
-                        $attributeName .= $attributeEntry['attribute']['backendName'].':';
+                        $attributeName .= $attributeEntry['attribute']['backendName'] . ':';
                         $attributeName .= $attributeEntry['attributeValue']['backendName'];
-                        if(count($variation['variationAttributeValues']) > $key+1) {
+                        if (count($variation['variationAttributeValues']) > $key + 1) {
                             $attributeName .= ' | ';
                         }
                     }
@@ -123,13 +122,13 @@ class ProductExport
                     'advaHandling'         => 1,
                     'imageUrl'             => $variation['images'][0]['urlPreview'] ?? ' ',
                     'sellerSkuName'        => ($item['texts'][0]['name1'] ?? '') . ($attributeName ? ' ' . $attributeName : ''),
-                    'sellerSkuDescription' => $item['texts'][0]['shortDescription'] ?? ' '
+                    'sellerSkuDescription' => $item['texts'][0]['shortDescription'] ?? ' ',
+                    'customsTariffNumber'  => $this->getCustomTariffNumber($item['customsTariffNumber'], $variation['customsTariffNumber'])
                 ];
             }
 
             $page++;
-        }
-        while(!$result->isLastPage());
+        } while (!$result->isLastPage());
 
         return $variationsData;
     }
@@ -142,13 +141,36 @@ class ProductExport
      */
     private function getItemData(int $itemId): Item
     {
-        if(isset($this->CACHE['items'][$itemId])) {
+        if (isset($this->CACHE['items'][$itemId])) {
             return $this->CACHE['items'][$itemId];
         }
 
         $item = $this->itemRepository->show($itemId);
 
         return $this->CACHE['items'][$itemId] = $item;
+    }
+
+    /**
+     * Retrieve custom tariff number.
+     *
+     * @param string $itemCustomsTariffNumber The custom tariff number of the item.
+     * @param string $variantCustomsTariffNumber The custom tariff number of the variant.
+     * @return string The custom tariff number as a string.
+     */
+    private function getCustomTariffNumber(string $itemCustomsTariffNumber, string $variantCustomsTariffNumber): string
+    {
+        // If itemCustomsTariffNumber is empty, check variantCustomsTariffNumber
+        if (!empty($variantCustomsTariffNumber)) {
+            return $variantCustomsTariffNumber;
+        }
+
+        // Check if itemCustomsTariffNumber is not empty
+        if (!empty($itemCustomsTariffNumber)) {
+            return $itemCustomsTariffNumber;
+        }
+
+        // Return an empty string if both are empty or null
+        return '';
     }
 
     /**
@@ -159,7 +181,7 @@ class ProductExport
      */
     private function getManufacturer(int $manufacturerId): string
     {
-        if(isset($this->CACHE['manufacturer'][$manufacturerId])) {
+        if (isset($this->CACHE['manufacturer'][$manufacturerId])) {
             return $this->CACHE['manufacturer'][$manufacturerId];
         }
 
@@ -187,12 +209,13 @@ class ProductExport
             'containsBattery',      // Indicates whether the product has a battery
 
             'advaHandling',         // Indicates whether this is a physical item that is in the warehouse and will be
-                                    // handled by advastore, or whether it is a non-physical item, such as a voucher or license,
-                                    // that the store must handle itself.
+            // handled by advastore, or whether it is a non-physical item, such as a voucher or license,
+            // that the store must handle itself.
 
             'imageUrl',             // Url to a picture of the article
             'sellerSkuName',        // Product title
             'sellerSkuDescription', // Article description
+            'customsTariffNumber'   // Customs tariff number
         ];
     }
 }
