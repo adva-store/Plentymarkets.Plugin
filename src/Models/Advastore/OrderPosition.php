@@ -8,7 +8,7 @@ class OrderPosition
     public ?string $sellerSku;
     public ?float  $netSalesPrice;
     public ?float  $grossSalesPrice;
-    public ?array $shippingProviderServices = [];
+    public ?array $shippingProviderServices;
     /**
      * @param int|null $quantity
      * @return OrderPosition
