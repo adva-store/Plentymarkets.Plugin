@@ -20,7 +20,6 @@ use Plenty\Plugin\Log\Loggable;
 class OrderExport
 {
     use Loggable;
-
     /**
      * OrderExport constructor.
      */
@@ -29,8 +28,7 @@ class OrderExport
         private OrderBuilder $orderBuilder,
         private OrderRepositoryContract $orderRepository,
         private WizardData $wizardData
-    ) {
-    }
+    ) {}
 
     /**
      * Export the PlentyOrder to Advastore.
@@ -42,30 +40,42 @@ class OrderExport
      */
     public function export(plentyOrder $plentyOrder): advastoreOrder
     {
+        $advastoreOrder = null;
+        $response = null;
+
         try {
             $advastoreOrder = $this->orderBuilder->buildOrder($plentyOrder);
             $response = $this->webservice->sendOrder($advastoreOrder);
 
+            // Log the response
             $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME . '::Logger.debug', $response);
 
-            if ($response->orderId) {
+            // Check response for success or error
+            if (!empty($response->orderId)) {
                 OrderHelper::setExternalOrderId($plentyOrder->id, $response->orderId);
                 OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getStatusId());
                 OrderHelper::setOrderComment($plentyOrder->id, "Auftrag exportiert an Advastore ($response->orderId)");
             } else {
+                $errorType = $response->type ?? 'Unknown';
+                $errorTitle = $response->title ?? 'No title provided';
+                $errorDetail = $response->detail ?? 'No detail provided';
+
                 OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getErrorStatusId());
-                OrderHelper::setOrderComment(
-                    $plentyOrder->id,
-                    "Fehler bei Auftragsexport an Advastore ({$response->type})<br>{$response->title}<br>{$response->detail}"
-                );
+                OrderHelper::setOrderComment($plentyOrder->id,
+                    "Fehler bei Auftragsexport an Advastore ($errorType)<br>$errorTitle<br>$errorDetail");
             }
         } catch (Exception $e) {
+            // Handle unexpected errors
+            $errorType = $response->type ?? 'Unknown';
             OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getErrorStatusId());
-            OrderHelper::setOrderComment(
-                $plentyOrder->id,
-                "Fehler bei Auftragsexport an Advastore ($response->type)<br>" . $e->getMessage()
-            );
-            return $advastoreOrder;
+            OrderHelper::setOrderComment($plentyOrder->id,
+                "Fehler bei Auftragsexport an Advastore ($errorType)<br>" . $e->getMessage());
+
+            // Log the exception
+            $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', [
+                'message' => $e->getMessage(),
+                'stack' => $e->getTraceAsString()
+            ]);
         }
 
         return $advastoreOrder;
