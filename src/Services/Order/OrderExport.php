@@ -58,11 +58,11 @@ class OrderExport
             } else {
                 $errorType = $response->type ?? 'Unknown';
                 $errorTitle = $response->title ?? 'No title provided';
-                $errorDetail = $response->detail ?? 'No detail provided';
+                $detail = $response->detail ?? 'No detail provided';
 
                 OrderHelper::setOrderStatus($plentyOrder->id, $this->wizardData->getErrorStatusId());
                 OrderHelper::setOrderComment($plentyOrder->id,
-                    "Fehler bei Auftragsexport an Advastore ($errorType)<br>$errorTitle<br>$errorDetail");
+                    "Fehler bei Auftragsexport an Advastore ($errorType)<br>$errorTitle<br>$detail");
             }
         } catch (Exception $e) {
             // Handle unexpected errors
