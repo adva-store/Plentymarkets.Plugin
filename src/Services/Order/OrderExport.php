@@ -45,11 +45,10 @@ class OrderExport
 
         try {
             $advastoreOrder = $this->orderBuilder->buildOrder($plentyOrder);
-            $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME . '::Logger.debug', $advastoreOrder);
             $response = $this->webservice->sendOrder($advastoreOrder);
 
             // Log the response
-            $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME . 'ECOMM RESPONSE PARSE', $response);
+            $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME . 'ECOMM ORDER RESPONSE', $response);
 
             // Check response for success or error
             if (!empty($response->orderId)) {
@@ -60,12 +59,15 @@ class OrderExport
                 // If orderId is not present, treat it as an error response
                 $this->handleErrorResponse($plentyOrder, $response);
             }
-        } catch (RequestException $e) {
-            $this->getLogger('OrderExport')->error("CATCH ERROR RESPONSE TRY PARSE", $e);
+        } catch (Exception $e) {
+            $this->getLogger('OrderExport')->error("Error received from Advastore API", $e);
+            $code = $e->getCode();
+            $exceptionAsString = $e->__tostring();
+            $this->getLogger('OrderExport')->error("Error status received $code", );
+            $this->getLogger('OrderExport')->error("Error status received $exceptionAsString", );
 
             // Handle unexpected errors (e.g., API exceptions or network issues)
             $response = json_decode($e->getMessage()); // Attempt to parse error response if included
-            $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', "ENTERED TO THE CATCH END respnse $response");
 
             $this->handleErrorResponse($plentyOrder, $response, $e);
         }
