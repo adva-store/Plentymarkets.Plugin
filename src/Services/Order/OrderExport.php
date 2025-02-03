@@ -65,6 +65,7 @@ class OrderExport
 
             // Handle unexpected errors (e.g., API exceptions or network issues)
             $response = json_decode($e->getMessage()); // Attempt to parse error response if included
+            $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', "ENTERED TO THE CATCH END respnse $response");
 
             $this->handleErrorResponse($plentyOrder, $response, $e);
         }
@@ -110,9 +111,6 @@ class OrderExport
         );
 
         // Log additional exception details if provided
-        $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', "ENTERED TO THE END");
-        $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', $response);
-        
         if ($exception) {
             $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error GET EXC MSG',$exception->getMessage());
             $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', [
