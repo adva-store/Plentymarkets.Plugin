@@ -60,8 +60,8 @@ class OrderExport
                 // If orderId is not present, treat it as an error response
                 $this->handleErrorResponse($plentyOrder, $response);
             }
-        } catch (Exception $e) {
-            $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error',"CATCH ERROR RESPONSE TRY PARSE");
+        } catch (RequestException $e) {
+            $this->getLogger('OrderExport')->error("CATCH ERROR RESPONSE TRY PARSE", $e);
 
             // Handle unexpected errors (e.g., API exceptions or network issues)
             $response = json_decode($e->getMessage()); // Attempt to parse error response if included
