@@ -45,6 +45,7 @@ class OrderExport
 
         try {
             $advastoreOrder = $this->orderBuilder->buildOrder($plentyOrder);
+            $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME . '::Logger.debug', $advastoreOrder);
             $response = $this->webservice->sendOrder($advastoreOrder);
 
             // Log the response
@@ -106,6 +107,8 @@ class OrderExport
         );
 
         // Log additional exception details if provided
+        $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', $response);
+
         if ($exception) {
             $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', [
                 'message' => $exception->getMessage(),
