@@ -49,7 +49,7 @@ class OrderExport
             $response = $this->webservice->sendOrder($advastoreOrder);
 
             // Log the response
-            $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME . '::Logger.debug', $response);
+            $this->getLogger('OrderExport')->debug(Settings::PLUGIN_NAME . 'ECOMM RESPONSE PARSE', $response);
 
             // Check response for success or error
             if (!empty($response->orderId)) {
@@ -61,8 +61,11 @@ class OrderExport
                 $this->handleErrorResponse($plentyOrder, $response);
             }
         } catch (Exception $e) {
+            $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error',"CATCH ERROR RESPONSE TRY PARSE");
+
             // Handle unexpected errors (e.g., API exceptions or network issues)
             $response = json_decode($e->getMessage()); // Attempt to parse error response if included
+
             $this->handleErrorResponse($plentyOrder, $response, $e);
         }
 
@@ -107,9 +110,11 @@ class OrderExport
         );
 
         // Log additional exception details if provided
+        $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', "ENTERED TO THE END");
         $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', $response);
-
+        
         if ($exception) {
+            $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error GET EXC MSG',$exception->getMessage());
             $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', [
                 'message' => $exception->getMessage(),
                 'stack' => $exception->getTraceAsString()
