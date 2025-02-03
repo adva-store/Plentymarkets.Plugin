@@ -68,6 +68,7 @@ class OrderExport
 
             // Handle unexpected errors (e.g., API exceptions or network issues)
             $response = json_decode($e->getMessage()); // Attempt to parse error response if included
+            $this->getLogger('OrderExport')->error("Error response get message method", $response );
 
             $this->handleErrorResponse($plentyOrder, $response, $e);
         }
