@@ -64,7 +64,7 @@ class OrderExport
             $code = $e->getCode();
             $exceptionAsString = $e->__tostring();
             $this->getLogger('OrderExport')->error("Error status received $code", );
-            $this->getLogger('OrderExport')->error("Error status received $exceptionAsString", );
+            $this->getLogger('OrderExport')->error("Error as string", $exceptionAsString );
 
             // Handle unexpected errors (e.g., API exceptions or network issues)
             $response = json_decode($e->getMessage()); // Attempt to parse error response if included
