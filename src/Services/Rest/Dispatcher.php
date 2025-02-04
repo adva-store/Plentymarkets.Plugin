@@ -16,12 +16,12 @@ use Advastore\Config\WizardData;
  */
 class Dispatcher
 {
-	use Loggable;
+    use Loggable;
 
-	protected string $baseURL;
-    protected string $apiToken     = '';
+    protected string $baseURL;
+    protected string $apiToken = '';
     protected string $sandboxToken = '';
-    protected bool   $isTesting    = true;
+    protected bool $isTesting = true;
 
     /**
      * Dispatcher constructor.
@@ -31,16 +31,16 @@ class Dispatcher
      */
     public function __construct(
         private WizardData $wizardData
-    ){
+    ) {
         $this->isTesting = $this->wizardData->isTesting();
-        $this->apiToken  = $this->wizardData->getApiToken();
-        $this->baseURL   = Settings::URL_PROD;
+        $this->apiToken = $this->wizardData->getApiToken();
+        $this->baseURL = Settings::URL_PROD;
 
-        if($this->isTesting) {
-            $this->baseURL  = Settings::URL_DEV;
+        if ($this->isTesting) {
+            $this->baseURL = Settings::URL_DEV;
             $this->sandboxToken = $this->wizardData->getSandboxToken();
         }
-	}
+    }
 
     /**
      * Send an HTTP request to the Advastore API.
@@ -50,52 +50,82 @@ class Dispatcher
      * @return mixed Returns the decoded JSON response from the API.
      * @throws Exception
      */
-	private function sendRequest(string $method, RequestModel $request): mixed
-	{
-		$header[] = "Content-Type: $request->contentType";
+    private function sendRequest(string $method, RequestModel $request): mixed
+    {
+        $header[] = "Content-Type: $request->contentType";
         $header[] = "ApiKey: $this->apiToken";
-        if($this->isTesting) $header[] = "Sandboxapikey: $this->sandboxToken";
+        if ($this->isTesting)
+            $header[] = "Sandboxapikey: $this->sandboxToken";
 
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-			CURLOPT_CUSTOMREQUEST => $method,
-			CURLOPT_URL => $this->baseURL.$request->requestURL,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_HTTPHEADER => $header
-		]);
+            CURLOPT_CUSTOMREQUEST => $method,
+            CURLOPT_URL => $this->baseURL . $request->requestURL,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => $header
+        ]);
 
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, !$this->isTesting);
 
-		if($request->postfields)
-			curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($request->postfields));
+        if ($request->postfields)
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($request->postfields));
 
-		if($request->requestBody)
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $request->requestBody);
+        if ($request->requestBody)
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $request->requestBody);
 
-		$response = curl_exec($curl);
-		$httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $response = curl_exec($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($curl);
 
-		$this
-			->getLogger(Settings::PLUGIN_NAME." httpRequest")
-			->debug(Settings::PLUGIN_NAME.'::Logger.done', [
-                'header'    => $header,
-				'method'    => $method,
-				'url'       => $this->baseURL.$request->requestURL,
-				'status'    => $httpcode,
-				'request'   => $request,
-				'response'  => $response,
-                'curlError' => curl_error($curl)
-			]);
+        $this
+            ->getLogger(Settings::PLUGIN_NAME . " httpRequest")
+            ->debug(Settings::PLUGIN_NAME . '::Logger.done', [
+                'header' => $header,
+                'method' => $method,
+                'url' => $this->baseURL . $request->requestURL,
+                'status' => $httpcode,
+                'request' => $request,
+                'response' => $response,
+                'curlError' => $curlError
+            ]);
 
-		curl_close($curl);
+        curl_close($curl);
 
-        if($httpcode >= Response::HTTP_BAD_REQUEST && $httpcode != Response::HTTP_NOT_ACCEPTABLE) {
-            throw new Exception("Dispatcher::sendRequest".$httpcode);
+        if ($httpcode >= Response::HTTP_BAD_REQUEST && $httpcode != Response::HTTP_NOT_ACCEPTABLE) {
+            // Decode JSON response
+            $responseError = json_decode($response, true);
+            
+            // Extract title
+            $title = $responseError['title'] ?? 'Validation Error';
+        
+            // Extract and format errors
+            $errorMessages = [];
+            if (!empty($responseError['errors']) && is_array($responseError['errors'])) {
+                foreach ($responseError['errors'] as $field => $messages) {
+                    if (is_array($messages)) {
+                        foreach ($messages as $message) {
+                            // Convert "ShippingAddress.PostalCode" to "Shipping Address Postal Code"
+                            $formattedField = ucwords(str_replace(['.', '_'], ' ', $field));
+                            $errorMessages[] = "$formattedField: $message";
+                        }
+                    } else {
+                        // Handle single error message cases
+                        $formattedField = ucwords(str_replace(['.', '_'], ' ', $field));
+                        $errorMessages[] = "$formattedField: $messages";
+                    }
+                }
+            }
+        
+            // Build the error message string
+            $errorString = !empty($errorMessages) ? implode('; ', $errorMessages) : 'No additional details provided.';
+        
+            // Throw an exception with the formatted error message
+            throw new Exception("$title - $errorString", $httpcode);
         }
 
         return json_decode($response);
-	}
+    }
 
     /**
      * Send a GET request to the Advastore API.
@@ -104,10 +134,10 @@ class Dispatcher
      * @return mixed Returns the decoded JSON response from the API.
      * @throws Exception
      */
-	protected function get(RequestModel $requestModel): mixed
+    protected function get(RequestModel $requestModel): mixed
     {
-		return $this->sendRequest('GET', $requestModel);
-	}
+        return $this->sendRequest('GET', $requestModel);
+    }
 
     /**
      * Send a POST request to the Advastore API.
@@ -116,9 +146,10 @@ class Dispatcher
      * @return mixed Returns the decoded JSON response from the API.
      * @throws Exception
      */
-    protected function post(RequestModel $requestModel): mixed {
-		return $this->sendRequest('POST', $requestModel);
-	}
+    protected function post(RequestModel $requestModel): mixed
+    {
+        return $this->sendRequest('POST', $requestModel);
+    }
 
     /**
      * Send a PUT request to the Advastore API.
@@ -127,9 +158,10 @@ class Dispatcher
      * @return mixed Returns the decoded JSON response from the API.
      * @throws Exception
      */
-    protected function put(RequestModel $requestModel): mixed {
-		return $this->sendRequest('PUT', $requestModel);
-	}
+    protected function put(RequestModel $requestModel): mixed
+    {
+        return $this->sendRequest('PUT', $requestModel);
+    }
 
     /**
      * Send a DELETE request to the Advastore API.
@@ -138,7 +170,8 @@ class Dispatcher
      * @return mixed Returns the decoded JSON response from the API.
      * @throws Exception
      */
-    protected function delete(RequestModel $requestModel): mixed {
-		return $this->sendRequest('DELETE', $requestModel);
-	}
+    protected function delete(RequestModel $requestModel): mixed
+    {
+        return $this->sendRequest('DELETE', $requestModel);
+    }
 }
