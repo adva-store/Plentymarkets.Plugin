@@ -62,7 +62,7 @@ class OrderExport
         } catch (Exception $e) {
             $this->getLogger('OrderExport')->error("Error received from Advastore API", $e);
             $code = $e->getCode();
-            $exceptionAsString = $e->__tostring();
+            $exceptionAsString = $e->getMessage();
             $this->getLogger('OrderExport')->error("Error status received $code", );
             $this->getLogger('OrderExport')->error("Error as string", $exceptionAsString);
 
@@ -87,6 +87,7 @@ class OrderExport
     {
         if ($exception) {
             $errorType = 'Bad request';
+            $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', $exception->getMessage());
         } else {
             $errorType = $response->type ?? 'Unknown';
         }

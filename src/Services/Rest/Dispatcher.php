@@ -95,26 +95,33 @@ class Dispatcher
         if ($httpcode >= Response::HTTP_BAD_REQUEST && $httpcode != Response::HTTP_NOT_ACCEPTABLE) {
             // Decode JSON response
             $responseError = json_decode($response, true);
+            
             // Extract title
             $title = $responseError['title'] ?? 'Validation Error';
-
+        
             // Extract and format errors
             $errorMessages = [];
             if (!empty($responseError['errors']) && is_array($responseError['errors'])) {
                 foreach ($responseError['errors'] as $field => $messages) {
-                    foreach ($messages as $message) {
-                        // Convert "ShippingAddress.PostalCode" to "Shipping Address Postal Code"
-                        $formattedField = str_replace(['.', '_'], ' ', $field);
-                        $errorMessages[] = "$formattedField: $message";
+                    if (is_array($messages)) {
+                        foreach ($messages as $message) {
+                            // Convert "ShippingAddress.PostalCode" to "Shipping Address Postal Code"
+                            $formattedField = ucwords(str_replace(['.', '_'], ' ', $field));
+                            $errorMessages[] = "$formattedField: $message";
+                        }
+                    } else {
+                        // Handle single error message cases
+                        $formattedField = ucwords(str_replace(['.', '_'], ' ', $field));
+                        $errorMessages[] = "$formattedField: $messages";
                     }
                 }
             }
-
-            // Join errors into a single string
-            $errorString = !empty($errorMessages) ? "Errors: " . implode(', ', $errorMessages) : '';
-
+        
+            // Build the error message string
+            $errorString = !empty($errorMessages) ? implode('; ', $errorMessages) : 'No additional details provided.';
+        
             // Throw an exception with the formatted error message
-            throw new Exception("$title. $errorString", $httpcode);
+            throw new Exception("$title - $errorString", $httpcode);
         }
 
         return json_decode($response);
