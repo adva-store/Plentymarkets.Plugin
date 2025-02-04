@@ -75,6 +75,7 @@ class Dispatcher
 
 		$response = curl_exec($curl);
 		$httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($curl);
 
 		$this
 			->getLogger(Settings::PLUGIN_NAME." httpRequest")
@@ -85,13 +86,13 @@ class Dispatcher
 				'status'    => $httpcode,
 				'request'   => $request,
 				'response'  => $response,
-                'curlError' => curl_error($curl)
+                'curlError' => $curlError
 			]);
 
 		curl_close($curl);
 
         if($httpcode >= Response::HTTP_BAD_REQUEST && $httpcode != Response::HTTP_NOT_ACCEPTABLE) {
-            throw new Exception("Dispatcher::sendRequest".$httpcode);
+            throw new Exception($curlError,$httpcode);
         }
 
         return json_decode($response);

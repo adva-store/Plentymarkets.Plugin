@@ -64,11 +64,11 @@ class OrderExport
             $code = $e->getCode();
             $exceptionAsString = $e->__tostring();
             $this->getLogger('OrderExport')->error("Error status received $code", );
-            $this->getLogger('OrderExport')->error("Error as string", $exceptionAsString );
+            $this->getLogger('OrderExport')->error("Error as string", $exceptionAsString);
 
             // Handle unexpected errors (e.g., API exceptions or network issues)
             $response = json_decode($e->getMessage()); // Attempt to parse error response if included
-            $this->getLogger('OrderExport')->error("Error response get message method", $response );
+            $this->getLogger('OrderExport')->error("Error response get message method", $response);
 
             $this->handleErrorResponse($plentyOrder, $response, $e);
         }
@@ -85,7 +85,11 @@ class OrderExport
      */
     private function handleErrorResponse(plentyOrder $plentyOrder, ?object $response, ?Exception $exception = null): void
     {
-        $errorType = $response->type ?? 'Unknown';
+        if ($exception) {
+            $errorType = 'Bad request';
+        } else {
+            $errorType = $response->type ?? 'Unknown';
+        }
         $errorComments = [];
 
         // Check if the response has a problems array
@@ -98,6 +102,8 @@ class OrderExport
         } elseif (!empty($response->detail)) {
             // Fallback to the top-level detail if problems array is not available
             $errorComments[] = $response->detail;
+        } elseif ($exception) {
+            $errorComments[] = $exception->getMessage();
         } else {
             // Default message if no errors are provided
             $errorComments[] = 'Keine Details angegeben';
@@ -115,7 +121,6 @@ class OrderExport
 
         // Log additional exception details if provided
         if ($exception) {
-            $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error GET EXC MSG',$exception->getMessage());
             $this->getLogger('OrderExport')->error(Settings::PLUGIN_NAME . '::Logger.error', [
                 'message' => $exception->getMessage(),
                 'stack' => $exception->getTraceAsString()
