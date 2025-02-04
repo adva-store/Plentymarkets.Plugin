@@ -93,13 +93,15 @@ class Dispatcher
         curl_close($curl);
 
         if ($httpcode >= Response::HTTP_BAD_REQUEST && $httpcode != Response::HTTP_NOT_ACCEPTABLE) {
+            // Decode JSON response
+            $responseError = json_decode($response, true);
             // Extract title
-            $title = $response['title'] ?? 'Validation Error';
+            $title = $responseError['title'] ?? 'Validation Error';
 
             // Extract and format errors
             $errorMessages = [];
-            if (!empty($response['errors']) && is_array($response['errors'])) {
-                foreach ($response['errors'] as $field => $messages) {
+            if (!empty($responseError['errors']) && is_array($responseError['errors'])) {
+                foreach ($responseError['errors'] as $field => $messages) {
                     foreach ($messages as $message) {
                         // Convert "ShippingAddress.PostalCode" to "Shipping Address Postal Code"
                         $formattedField = str_replace(['.', '_'], ' ', $field);
