@@ -157,7 +157,7 @@ class ProductExport
      * @param string $variantCustomsTariffNumber The custom tariff number of the variant.
      * @return string The custom tariff number as a string.
      */
-    private function getCustomTariffNumber(string $itemCustomsTariffNumber, string $variantCustomsTariffNumber): string
+    private function getCustomTariffNumber(?string $itemCustomsTariffNumber, ?string $variantCustomsTariffNumber): string
     {
         // If itemCustomsTariffNumber is empty, check variantCustomsTariffNumber
         if (!empty($variantCustomsTariffNumber)) {
